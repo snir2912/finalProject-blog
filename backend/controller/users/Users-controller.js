@@ -1,11 +1,12 @@
 const User = require("../../models/user-model/User-model");
 const expressAsyncHandler = require("express-async-handler");
 const generateToken = require("../../config/token/genrateToke");
+const validateMongodbId = require("../../utils/validateMongodbId");
 
 const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email: req?.body?.email });
 
-  if (userExists) throw new Error("User aleady exists");
+  if (userExists) throw new Error("קיים פרופיל עם אותו דואר אלקטורני");
   try {
     const user = await User.create({
       firstName: req?.body?.firstName,
@@ -25,11 +26,57 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
   const userFound = await User.findOne({ email });
 
   if (userFound && (await userFound.isPasswordMatched(password))) {
-    res.json(userFound);
+    res.json({
+      _id: userFound?._id,
+      firstName: userFound?.firstName,
+      lastName: userFound?.lastName,
+      email: userFound?.email,
+      profilePhoto: userFound?.profilePhoto,
+      isAdmin: userFound?.isAdmin,
+      token: generateToken(userFound?._id),
+    });
   } else {
     res.status(401);
-    throw new Error("Invalid Login Credentials");
+    throw new Error("משהו השתבש, נסו שנית");
   }
 });
 
-module.exports = { userRegisterCtrl, userLoginCtrl };
+const getAllUsers = expressAsyncHandler(async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+const deleteUser = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    res.json(deletedUser);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+const getUserDetails = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+
+  try {
+    const user = await User.findById(id);
+    res.json(user);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = {
+  userRegisterCtrl,
+  userLoginCtrl,
+  getAllUsers,
+  deleteUser,
+  getUserDetails,
+};
