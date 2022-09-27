@@ -125,6 +125,15 @@ const followingUser = expressAsyncHandler(async (req, res) => {
   const { followId } = req.body;
   const loginUserId = req.user.id;
 
+  const targetUser = await User.findById(followId);
+
+  const alreadyFollowing = targetUser?.followers?.find(
+    user => user?.toString() === loginUserId.toString()
+  );
+
+  if (alreadyFollowing)
+    throw new Error("הפרופיל המבוקש כבר נמצא ברשימת העוקבים");
+
   await User.findByIdAndUpdate(followId, {
     $push: { followers: loginUserId },
   });
