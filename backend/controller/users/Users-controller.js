@@ -134,14 +134,46 @@ const followingUser = expressAsyncHandler(async (req, res) => {
   if (alreadyFollowing)
     throw new Error("הפרופיל המבוקש כבר נמצא ברשימת העוקבים");
 
-  await User.findByIdAndUpdate(followId, {
-    $push: { followers: loginUserId },
-  });
+  await User.findByIdAndUpdate(
+    followId,
+    {
+      $push: { followers: loginUserId },
+    },
+    { new: true }
+  );
 
-  await User.findByIdAndUpdate(loginUserId, {
-    $push: { following: followId },
-  });
+  await User.findByIdAndUpdate(
+    loginUserId,
+    {
+      $push: { following: followId },
+      isFollowing: true,
+    },
+    { new: true }
+  );
   res.json("עוקב");
+});
+
+const unFollowUser = expressAsyncHandler(async (req, res) => {
+  const { unfollowId } = req.body;
+  const loginUserId = req.user.id;
+
+  await User.findByIdAndUpdate(
+    unfollowId,
+    {
+      $pull: { followers: loginUserId },
+      isFollowing: false,
+    },
+    { new: true }
+  );
+  await User.findOneAndUpdate(
+    loginUserId,
+    {
+      $pull: { followers: loginUserId },
+      isFollowing: false,
+    },
+    { new: true }
+  );
+  res.json("הפרופיל כבר לא ברשימת העוקבים שלך");
 });
 
 module.exports = {
@@ -154,4 +186,5 @@ module.exports = {
   updateUser,
   updateUserPassword,
   followingUser,
+  unFollowUser,
 };
