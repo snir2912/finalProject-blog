@@ -1,7 +1,10 @@
 const User = require("../../models/user-model/User-model");
+const sgMail = require("@sendgrid/mail");
 const expressAsyncHandler = require("express-async-handler");
 const generateToken = require("../../config/token/genrateToke");
 const validateMongodbId = require("../../utils/validateMongodbId");
+
+sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 const userRegister = expressAsyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email: req?.body?.email });
@@ -105,11 +108,10 @@ const updateUser = expressAsyncHandler(async (req, res) => {
 });
 
 const updateUserPassword = expressAsyncHandler(async (req, res) => {
-  //destructure the login user
   const { _id } = req.user;
   const { password } = req.body;
   validateMongodbId(_id);
-  //Find the user by _id
+
   const user = await User.findById(_id);
 
   if (password) {
@@ -203,6 +205,21 @@ const unBlockUser = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
+const generateVerificationToken = expressAsyncHandler(async (req, res) => {
+  try {
+    const msg = {
+      to: "snir2912@gmail.com",
+      from: "snir1290@outlook.com",
+      subject: "test email sending",
+      text: "this is a test",
+    };
+    await sgMail.send(msg);
+    res.json("נשלח בהצלחה!");
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 module.exports = {
   userRegister,
   userLogin,
@@ -216,4 +233,5 @@ module.exports = {
   unFollowUser,
   blockUser,
   unBlockUser,
+  generateVerificationToken,
 };
