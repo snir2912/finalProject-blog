@@ -189,6 +189,19 @@ const blockUser = expressAsyncHandler(async (req, res) => {
   );
   res.json(user);
 });
+const unBlockUser = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    {
+      isBlocked: false,
+    },
+    { new: true }
+  );
+  res.json(user);
+});
 
 module.exports = {
   userRegister,
@@ -202,4 +215,5 @@ module.exports = {
   followingUser,
   unFollowUser,
   blockUser,
+  unBlockUser,
 };
