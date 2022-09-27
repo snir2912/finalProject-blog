@@ -3,7 +3,7 @@ const expressAsyncHandler = require("express-async-handler");
 const generateToken = require("../../config/token/genrateToke");
 const validateMongodbId = require("../../utils/validateMongodbId");
 
-const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
+const userRegister = expressAsyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email: req?.body?.email });
 
   if (userExists) throw new Error("קיים פרופיל עם אותו דואר אלקטורני");
@@ -20,7 +20,7 @@ const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-const userLoginCtrl = expressAsyncHandler(async (req, res) => {
+const userLogin = expressAsyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const userFound = await User.findOne({ email });
@@ -104,7 +104,7 @@ const updateUser = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
-const updateUserPasswordCtrl = expressAsyncHandler(async (req, res) => {
+const updateUserPassword = expressAsyncHandler(async (req, res) => {
   //destructure the login user
   const { _id } = req.user;
   const { password } = req.body;
@@ -121,13 +121,28 @@ const updateUserPasswordCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
+const followingUser = expressAsyncHandler(async (req, res) => {
+  const { followId } = req.body;
+  const loginUserId = req.user.id;
+
+  await User.findByIdAndUpdate(followId, {
+    $push: { followers: loginUserId },
+  });
+
+  await User.findByIdAndUpdate(loginUserId, {
+    $push: { following: followId },
+  });
+  res.json("עוקב");
+});
+
 module.exports = {
-  userRegisterCtrl,
-  userLoginCtrl,
+  userRegister,
+  userLogin,
   getAllUsers,
   deleteUser,
   getUserDetails,
   userPofile,
   updateUser,
-  updateUserPasswordCtrl,
+  updateUserPassword,
+  followingUser,
 };
