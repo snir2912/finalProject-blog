@@ -10,6 +10,7 @@ const {
   updateUserPassword,
   followingUser,
   unFollowUser,
+  blockUser,
 } = require("../../controller/users/Users-controller");
 const authMiddleware = require("../../middlewares/Auth/authMiddleware");
 
@@ -21,6 +22,7 @@ userRoutes.get("/", authMiddleware, getAllUsers);
 userRoutes.put("/password", authMiddleware, updateUserPassword);
 userRoutes.put("/follow", authMiddleware, followingUser);
 userRoutes.put("/unfollow", authMiddleware, unFollowUser);
+userRoutes.put("/block-user/:id", authMiddleware, blockUser);
 userRoutes.get("/profile/:id", authMiddleware, userPofile);
 userRoutes.get("/:id", getUserDetails);
 userRoutes.delete("/:id", deleteUser);

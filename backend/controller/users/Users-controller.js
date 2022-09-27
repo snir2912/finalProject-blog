@@ -176,6 +176,20 @@ const unFollowUser = expressAsyncHandler(async (req, res) => {
   res.json("הפרופיל כבר לא ברשימת העוקבים שלך");
 });
 
+const blockUser = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    {
+      isBlocked: true,
+    },
+    { new: true }
+  );
+  res.json(user);
+});
+
 module.exports = {
   userRegister,
   userLogin,
@@ -187,4 +201,5 @@ module.exports = {
   updateUserPassword,
   followingUser,
   unFollowUser,
+  blockUser,
 };
