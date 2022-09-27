@@ -12,6 +12,7 @@ const {
   unFollowUser,
   blockUser,
   unBlockUser,
+  generateVerificationToken,
 } = require("../../controller/users/Users-controller");
 const authMiddleware = require("../../middlewares/Auth/authMiddleware");
 
@@ -29,5 +30,6 @@ userRoutes.get("/profile/:id", authMiddleware, userPofile);
 userRoutes.get("/:id", getUserDetails);
 userRoutes.delete("/:id", deleteUser);
 userRoutes.put("/:id", authMiddleware, updateUser);
+userRoutes.post("/send-email", generateVerificationToken);
 
 module.exports = userRoutes;
