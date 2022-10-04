@@ -3,6 +3,7 @@ const sgMail = require("@sendgrid/mail");
 const expressAsyncHandler = require("express-async-handler");
 const generateToken = require("../../config/token/genrateToke");
 const validateMongodbId = require("../../utils/validateMongodbId");
+const crypto = require("crypto");
 
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
@@ -205,21 +206,88 @@ const unBlockUser = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
-const generateVerificationToken = expressAsyncHandler(async (req, res) => {
-  try {
-    const msg = {
-      to: "snir2912@gmail.com",
-      from: "snir1290@outlook.com",
-      subject: "test email sending",
-      text: "this is a test",
-    };
-    await sgMail.send(msg);
-    res.json("נשלח בהצלחה!");
-  } catch (error) {
-    res.json(error);
-  }
-});
+// // const generateVerificationToken = expressAsyncHandler(async (req, res) => {
+// //   const loginUserId = req.user.id;
+// //   const user = await User.findById(loginUserId);
+// //   try {
+// //     const verificationToken = await user.createAccountVerificationToken();
+// //     await user.save();
+// //     const verifyMsg =
+// //       "בכדי לאמת את החשבון, אנא לחצו על הלינק המצורף בתוך 10 דקות, אחרת התעלמו מהודעה זו";
 
+// //     const resetURL = `${verifyMsg} <a href="http://localhost:7777/verify-account/${verificationToken}">אימות החשבון</a>`;
+// //     const msg = {
+// //       to: "snir2912@gmail.com",
+// //       from: "snir1290@outlook.com",
+// //       subject: "test email sending",
+// //       html: resetURL,
+// //     };
+// //     await sgMail.send(msg);
+// //     res.json(resetURL);
+// //   } catch (error) {
+// //     res.json(error);
+// //   }
+// // });
+// const generateVerificationTokenCtrl = expressAsyncHandler(async (req, res) => {
+//   const loginUserId = req.user.id;
+
+//   const user = await User.findById(loginUserId);
+
+//   try {
+//     //Generate token
+//     const verificationToken = await user.createAccountVerificationToken();
+//     //save the user
+//     await user.save();
+//     console.log(verificationToken);
+//     //build your message
+
+//     const resetURL = `If you were requested to verify your account, verify now within 10 minutes, otherwise ignore this message <a href="http://localhost:3000/verify-account/${verificationToken}">Click to verify your account</a>`;
+//     const msg = {
+//       to: "snir2912@gmail.com",
+//       from: "snir1290@outlook.com",
+//       subject: "My first Node js email sending",
+//       html: resetURL,
+//     };
+
+//     await sgMail.send(msg);
+//     res.json(resetURL);
+//   } catch (error) {
+//     res.json(error);
+//   }
+// });
+// // const accountVerification = expressAsyncHandler(async (req, res) => {
+// //   const { token } = req.body;
+// //   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+// //   const userFound = await User.findOne({
+// //     accountVerificationToken: hashedToken,
+// //     accountVerificationTokenExpires: { $gt: new Date() },
+// //   });
+// //   if (!userFound) throw new Error("אין הרשאה, נסה שנית מאוחר יותר");
+// //   userFound.isAccountVerified = true;
+// //   userFound.accountVerificationToken = undefined;
+// //   userFound.accountVerificationTokenExpires = undefined;
+
+// //   await userFound.save();
+// //   res.json(userFound);
+// // });
+// const accountVerificationCtrl = expressAsyncHandler(async (req, res) => {
+//   const { token } = req.body;
+//   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+//   //find this user by token
+//   const userFound = await User.findOne({
+//     accountVerificationToken: hashedToken,
+//     accountVerificationTokenExpires: { $gt: new Date() },
+//   });
+
+//   if (!userFound) throw new Error("Token expired, try again later");
+//   //update the proprt to true
+//   userFound.isAccountVerified = true;
+//   userFound.accountVerificationToken = undefined;
+//   userFound.accountVerificationTokenExpires = undefined;
+//   await userFound.save();
+//   res.json(userFound);
+// });
 module.exports = {
   userRegister,
   userLogin,
@@ -233,5 +301,6 @@ module.exports = {
   unFollowUser,
   blockUser,
   unBlockUser,
-  generateVerificationToken,
+  // generateVerificationTokenCtrl,
+  // accountVerificationCtrl,
 };
