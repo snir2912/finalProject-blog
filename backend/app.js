@@ -1,21 +1,24 @@
 const express = require("express");
-const app = express();
-const port = process.env.PORT;
 const dotenv = require("dotenv");
 dotenv.config();
-const { errorHandler, notFound } = require("./middlewares/error/errorHandler");
 const dbConnect = require("./config/db/dbConnect");
+const userRoutes = require("./routes/users/User-route");
+const { errorHandler, notFound } = require("./middlewares/error/errorHandler");
+
+const app = express();
+//DB
 dbConnect();
 
-const userRoutes = require("./routes/users/User-route");
-
+//Middleware
 app.use(express.json());
 
+//Users route
 app.use("/api/users", userRoutes);
 
+//err handler
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port || 3000, console.log(`server is running on port ${port} `));
-
-// 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
+//server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, console.log(`Server is running ${PORT}`));
