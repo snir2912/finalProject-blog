@@ -21,7 +21,7 @@ const {
 const authMiddleware = require("../../middlewares/Auth/authMiddleware");
 const {
   profilePhotoUpload,
-  profilePohtoResize,
+  profilePhotoResize,
 } = require("../../middlewares/uploads/profilePhotoUpload");
 
 const userRoutes = express.Router();
@@ -32,7 +32,7 @@ userRoutes.put(
   "/profilephoto-upload",
   authMiddleware,
   profilePhotoUpload.single("image"),
-  profilePohtoResize,
+  profilePhotoResize,
   profilePhotoUploadCtrl
 );
 userRoutes.get("/", authMiddleware, fetchUsersCtrl);

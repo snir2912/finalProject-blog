@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const generateToken = require("../../config/token/genrateToke");
 const User = require("../../models/user-model/User-model");
 const validateMongodbId = require("../../utils/validateMongodbId");
+const cloudinaryUploadImage = require("../../utils/cloudinary");
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 //Register
@@ -326,8 +327,10 @@ const passwordResetCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
-  console.log(req.file);
-  res.json("upload");
+  const localPath = `public/img/profiles/${req.file.filename}`;
+  const imgUploaded = await cloudinaryUploadImage(localPath);
+  console.log(imgUploaded);
+  res.json(localPath);
 });
 
 module.exports = {
