@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-//create schema
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
