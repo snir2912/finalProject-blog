@@ -8,8 +8,6 @@ const validateMongodbId = require("../../utils/validateMongodbId");
 const cloudinaryUploadImage = require("../../utils/cloudinary");
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
-//Register
-
 const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email: req?.body?.email });
 
@@ -26,8 +24,6 @@ const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
     res.json(error);
   }
 });
-
-//Login user
 
 const loginUserCtrl = expressAsyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -50,8 +46,6 @@ const loginUserCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-//Users
-
 const fetchUsersCtrl = expressAsyncHandler(async (req, res) => {
   console.log(req.headers);
   try {
@@ -61,8 +55,6 @@ const fetchUsersCtrl = expressAsyncHandler(async (req, res) => {
     res.json(error);
   }
 });
-
-//Delete user
 
 const deleteUsersCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -76,8 +68,6 @@ const deleteUsersCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-//user details
-
 const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -90,8 +80,6 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-//User profile
-
 const userProfileCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
@@ -102,8 +90,6 @@ const userProfileCtrl = expressAsyncHandler(async (req, res) => {
     res.json(error);
   }
 });
-
-//Update profile
 
 const updateUserCtrl = expressAsyncHandler(async (req, res) => {
   const { _id } = req?.user;
@@ -124,8 +110,6 @@ const updateUserCtrl = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
-//Update password
-
 const updateUserPasswordCtrl = expressAsyncHandler(async (req, res) => {
   const { _id } = req.user;
   const { password } = req.body;
@@ -141,8 +125,6 @@ const updateUserPasswordCtrl = expressAsyncHandler(async (req, res) => {
     res.json(user);
   }
 });
-
-//following
 
 const followingUserCtrl = expressAsyncHandler(async (req, res) => {
   const { followId } = req.body;
@@ -175,8 +157,6 @@ const followingUserCtrl = expressAsyncHandler(async (req, res) => {
   res.json("You have successfully followed this user");
 });
 
-//unfollow
-
 const unfollowUserCtrl = expressAsyncHandler(async (req, res) => {
   const { unFollowId } = req.body;
   const loginUserId = req.user.id;
@@ -201,8 +181,6 @@ const unfollowUserCtrl = expressAsyncHandler(async (req, res) => {
   res.json("You have successfully unfollowed this user");
 });
 
-//Block user
-
 const blockUserCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
@@ -217,8 +195,6 @@ const blockUserCtrl = expressAsyncHandler(async (req, res) => {
   res.json(user);
 });
 
-//Block user
-
 const unBlockUserCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
@@ -232,8 +208,6 @@ const unBlockUserCtrl = expressAsyncHandler(async (req, res) => {
   );
   res.json(user);
 });
-
-// Generate Email verification token
 
 const generateVerificationTokenCtrl = expressAsyncHandler(async (req, res) => {
   const loginUserId = req.user.id;
@@ -260,8 +234,6 @@ const generateVerificationTokenCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-//Account verification
-
 const accountVerificationCtrl = expressAsyncHandler(async (req, res) => {
   const { token } = req.body;
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
@@ -277,8 +249,6 @@ const accountVerificationCtrl = expressAsyncHandler(async (req, res) => {
   await userFound.save();
   res.json(userFound);
 });
-
-//Forget token generator
 
 const forgetPasswordToken = expressAsyncHandler(async (req, res) => {
   const { email } = req.body;
@@ -307,8 +277,6 @@ const forgetPasswordToken = expressAsyncHandler(async (req, res) => {
     res.json(error);
   }
 });
-
-//Password reset
 
 const passwordResetCtrl = expressAsyncHandler(async (req, res) => {
   const { token, password } = req.body;

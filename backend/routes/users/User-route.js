@@ -18,7 +18,9 @@ const {
   passwordResetCtrl,
   profilePhotoUploadCtrl,
 } = require("../../controller/users/Users-controller");
+
 const authMiddleware = require("../../middlewares/Auth/authMiddleware");
+
 const {
   PhotoUpload,
   profilePhotoResize,
@@ -36,7 +38,6 @@ userRoutes.put(
   profilePhotoUploadCtrl
 );
 userRoutes.get("/", authMiddleware, fetchUsersCtrl);
-// Password reset
 userRoutes.post("/forget-password-token", forgetPasswordToken);
 userRoutes.put("/reset-password", passwordResetCtrl);
 userRoutes.put("/password", authMiddleware, updateUserPasswordCtrl);

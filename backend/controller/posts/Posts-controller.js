@@ -4,10 +4,8 @@ const validateMongodbId = require("../../utils/validateMongodbId");
 const Filter = require("bad-words");
 const User = require("../../models/user-model/User-model");
 const cloudinaryUploadImg = require("../../utils/cloudinary");
-// const { post } = require("../../routes/posts/Post-route");
 
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
-  // console.log(req.file);
   const { _id } = req.user;
   const filter = new Filter();
   const isProfane = filter.isProfane(req.body.title, req.body.description);

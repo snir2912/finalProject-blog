@@ -107,25 +107,21 @@ userSchema.virtual("posts", {
   localField: "_id",
 });
 
-//Hash password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
   }
-  //hash password
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-//match password
 userSchema.methods.isPasswordMatched = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-//Verify account
 userSchema.methods.createAccountVerificationToken = async function () {
-  //create a token
   const verificationToken = crypto.randomBytes(32).toString("hex");
   this.accountVerificationToken = crypto
     .createHash("sha256")
@@ -134,8 +130,6 @@ userSchema.methods.createAccountVerificationToken = async function () {
   this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000; //10 minutes
   return verificationToken;
 };
-
-//Password reset/forget
 
 userSchema.methods.createPasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
@@ -147,7 +141,6 @@ userSchema.methods.createPasswordResetToken = async function () {
   return resetToken;
 };
 
-//Compile schema into model
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
