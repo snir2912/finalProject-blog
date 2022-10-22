@@ -48,6 +48,13 @@ const getSinglePostCtrl = expressAsyncHandler(async (req, res) => {
   validateMongodbId(id);
   try {
     const post = await Post.findById(id).populate("user");
+    await Post.findByIdAndUpdate(
+      id,
+      {
+        $inc: { numViews: 1 },
+      },
+      { new: true }
+    );
     res.json(post);
   } catch (error) {
     res.json(error);
