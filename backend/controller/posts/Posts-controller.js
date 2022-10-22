@@ -34,6 +34,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
   } catch (error) {
     res.json(error);
   }
+  //s
 });
 
 module.exports = { createPostCtrl };
