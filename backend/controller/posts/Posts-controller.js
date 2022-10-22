@@ -4,7 +4,7 @@ const validateMongodbId = require("../../utils/validateMongodbId");
 const Filter = require("bad-words");
 const User = require("../../models/user-model/User-model");
 const cloudinaryUploadImg = require("../../utils/cloudinary");
-const { post } = require("../../routes/posts/Post-route");
+// const { post } = require("../../routes/posts/Post-route");
 
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
   // console.log(req.file);
@@ -38,9 +38,20 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 });
 const getAllPosts = expressAsyncHandler(async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).populate("user");
     res.json(posts);
   } catch (error) {}
 });
 
-module.exports = { createPostCtrl, getAllPosts };
+const getSinglePostCtrl = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+  try {
+    const post = await Post.findById(id).populate("user");
+    res.json(post);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = { createPostCtrl, getAllPosts, getSinglePostCtrl };
