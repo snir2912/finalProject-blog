@@ -1,5 +1,8 @@
 const express = require("express");
-const { createPostCtrl } = require("../../controller/posts/Posts-controller");
+const {
+  createPostCtrl,
+  getAllPosts,
+} = require("../../controller/posts/Posts-controller");
 const authMiddleware = require("../../middlewares/Auth/authMiddleware");
 const {
   PhotoUpload,
@@ -15,5 +18,6 @@ postRoute.post(
   postPhotoResize,
   createPostCtrl
 );
+postRoute.get("/", getAllPosts);
 
 module.exports = postRoute;

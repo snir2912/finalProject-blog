@@ -1,5 +1,6 @@
 const expressAsyncHandler = require("express-async-handler");
 const sgMail = require("@sendgrid/mail");
+const fs = require("fs");
 const crypto = require("crypto");
 const generateToken = require("../../config/token/genrateToke");
 const User = require("../../models/user-model/User-model");
@@ -307,7 +308,6 @@ const forgetPasswordToken = expressAsyncHandler(async (req, res) => {
   }
 });
 
-
 //Password reset
 
 const passwordResetCtrl = expressAsyncHandler(async (req, res) => {
@@ -340,6 +340,7 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
     },
     { new: true }
   );
+  fs.unlinkSync(localPath);
   res.json(foundUser);
 });
 
