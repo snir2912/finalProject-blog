@@ -4,6 +4,7 @@ const {
   getAllPosts,
   getSinglePostCtrl,
   updatePostCrl,
+  deletePostCrl,
 } = require("../../controller/posts/Posts-controller");
 const authMiddleware = require("../../middlewares/Auth/authMiddleware");
 const {
@@ -23,5 +24,6 @@ postRoute.post(
 postRoute.get("/", getAllPosts);
 postRoute.get("/:id", getSinglePostCtrl);
 postRoute.put("/:id", authMiddleware, updatePostCrl);
+postRoute.delete("/:id", authMiddleware, deletePostCrl);
 
 module.exports = postRoute;

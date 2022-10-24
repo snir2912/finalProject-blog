@@ -76,9 +76,21 @@ const updatePostCrl = expressAsyncHandler(async (req, res) => {
     res.json(error);
   }
 });
+
+const deletePostCrl = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+  try {
+    const post = await Post.findByIdAndDelete(id);
+    res.json(post);
+  } catch (error) {
+    res.json(error);
+  }
+});
 module.exports = {
   createPostCtrl,
   getAllPosts,
   getSinglePostCtrl,
   updatePostCrl,
+  deletePostCrl,
 };
