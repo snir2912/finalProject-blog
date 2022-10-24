@@ -22,11 +22,6 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
   const localPath = `public/img/posts/${req.file.filename}`;
   const imgUploaded = await cloudinaryUploadImg(localPath);
   try {
-    // const post = await Post.create({
-    //   ...req.body,
-    //   image: imgUploaded?.url,
-    //   user: _id,
-    // });
     res.json(imgUploaded);
     //Remove uploaded img
     fs.unlinkSync(localPath);
@@ -45,7 +40,10 @@ const getSinglePostCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
   try {
-    const post = await Post.findById(id).populate("user");
+    const post = await Post.findById(id)
+      .populate("user")
+      .populate("disLikes")
+      .populate("likes");
     await Post.findByIdAndUpdate(
       id,
       {
@@ -59,7 +57,7 @@ const getSinglePostCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-const updatePostCrl = expressAsyncHandler(async (req, res) => {
+const updatePostCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
   try {
@@ -77,7 +75,7 @@ const updatePostCrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-const deletePostCrl = expressAsyncHandler(async (req, res) => {
+const deletePostCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
   try {
@@ -87,10 +85,104 @@ const deletePostCrl = expressAsyncHandler(async (req, res) => {
     res.json(error);
   }
 });
+
+const addLikeToPostCtrl = expressAsyncHandler(async (req, res) => {
+  const { postId } = req.body;
+  const post = await Post.findById(postId);
+  const loginUserId = req?.user?._id;
+
+  const isLiked = post?.isLiked;
+
+  const alreadyDisliked = post?.disLikes?.find(
+    userId => userId?.toString() === loginUserId?.toString()
+  );
+
+  if (alreadyDisliked) {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: { disLikes: loginUserId },
+        isDisLiked: false,
+      },
+      { new: true }
+    );
+    res.json(post);
+  }
+
+  if (isLiked) {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: { likes: loginUserId },
+        isLiked: false,
+      },
+      { new: true }
+    );
+    res.json(post);
+  } else {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: { likes: loginUserId },
+        isLiked: true,
+      },
+      { new: true }
+    );
+    res.json(post);
+  }
+});
+
+const addDisLikeToPostCtrl = expressAsyncHandler(async (req, res) => {
+  const { postId } = req.body;
+  const post = await Post.findById(postId);
+  const loginUserId = req?.user?._id;
+
+  const isDisLiked = post?.isDisLiked;
+
+  const alreadyliked = post?.likes?.find(
+    userId => userId?.toString() === loginUserId?.toString()
+  );
+
+  if (alreadyliked) {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: { likes: loginUserId },
+        isLiked: false,
+      },
+      { new: true }
+    );
+    res.json(post);
+  }
+
+  if (isDisLiked) {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: { disLikes: loginUserId },
+        isDisLiked: false,
+      },
+      { new: true }
+    );
+    res.json(post);
+  } else {
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: { disLikes: loginUserId },
+        isDisLiked: true,
+      },
+      { new: true }
+    );
+    res.json(post);
+  }
+});
 module.exports = {
   createPostCtrl,
   getAllPosts,
   getSinglePostCtrl,
-  updatePostCrl,
-  deletePostCrl,
+  updatePostCtrl,
+  deletePostCtrl,
+  addLikeToPostCtrl,
+  addDisLikeToPostCtrl,
 };
