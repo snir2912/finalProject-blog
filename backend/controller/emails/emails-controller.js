@@ -1,10 +1,16 @@
 const expressAsyncHandler = require("express-async-handler");
 const sgMail = require("@sendgrid/mail");
 const EmailMsg = require("../../models/emailMessaging/Email-messaging-model");
+const Filter = require("bad-words");
 
 const sendEmail = expressAsyncHandler(async (req, res) => {
-  console.log(req.user);
   const { to, subject, message } = req.body;
+  const emailMessage = subject + " " + message;
+  const filter = new Filter();
+
+  const isProfane = filter.isProfane(emailMessage);
+  if (isProfane) throw new Error("התמשת במילים אסורות, אנא נסו שוב.");
+
   try {
     const msg = {
       to,
