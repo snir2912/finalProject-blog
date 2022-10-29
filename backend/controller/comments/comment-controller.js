@@ -1,5 +1,6 @@
 const expressAsyncHandler = require("express-async-handler");
 const Comment = require("../../models/comment-model/comment-model");
+const validateMongodbId = require("../../utils/validateMongodbId");
 
 const createComment = expressAsyncHandler(async (req, res) => {
   const user = req.user;
@@ -28,6 +29,7 @@ const getAllComments = expressAsyncHandler(async (req, res) => {
 
 const getOneComment = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
+  validateMongodbId(id);
 
   try {
     const comment = await Comment.findById(id);
@@ -39,6 +41,7 @@ const getOneComment = expressAsyncHandler(async (req, res) => {
 
 const updateComment = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
+  validateMongodbId(id);
 
   try {
     const updateComment = await Comment.findByIdAndUpdate(
@@ -56,9 +59,21 @@ const updateComment = expressAsyncHandler(async (req, res) => {
   }
 });
 
+const deleteComment = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongodbId(id);
+  try {
+    const deletedComment = await Comment.findByIdAndDelete(id);
+    res.json(deletedComment);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 module.exports = {
   createComment,
   getAllComments,
   getOneComment,
   updateComment,
+  deleteComment,
 };
