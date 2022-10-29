@@ -15,11 +15,25 @@ const createCategory = expressAsyncHandler(async (req, res) => {
 
 const getAllCategories = expressAsyncHandler(async (req, res) => {
   try {
-    const categories = await Category.find({});
+    const categories = await Category.find({})
+      .populate("user")
+      .sort("-createdAt");
     res.json(categories);
   } catch (error) {
     res.json(error);
   }
 });
 
-module.exports = { createCategory, getAllCategories };
+const getOneCategory = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const category = await Category.findById(id)
+      .populate("user")
+      .sort("-createdAt");
+    res.json(category);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = { createCategory, getAllCategories, getOneCategory };
