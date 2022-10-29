@@ -17,4 +17,13 @@ const createComment = expressAsyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createComment };
+const getAllComments = expressAsyncHandler(async (req, res) => {
+  try {
+    const comments = await Comment.find({}).sort("-created");
+    res.json(comments);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = { createComment, getAllComments };
