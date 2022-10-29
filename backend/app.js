@@ -2,8 +2,9 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const dbConnect = require("./config/db/dbConnect");
-const userRoutes = require("./routes/users/User-route");
+const userRoute = require("./routes/users/User-route");
 const postRoute = require("./routes/posts/Post-route");
+const commentRoute = require("./routes/comments/Comment-route");
 const { errorHandler, notFound } = require("./middlewares/error/errorHandler");
 
 const app = express();
@@ -11,8 +12,9 @@ dbConnect();
 
 app.use(express.json());
 
-app.use("/api/users", userRoutes);
+app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/comments", commentRoute);
 
 app.use(notFound);
 app.use(errorHandler);

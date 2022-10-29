@@ -26,35 +26,35 @@ const {
   profilePhotoResize,
 } = require("../../middlewares/uploads/photoUpload");
 
-const userRoutes = express.Router();
+const userRoute = express.Router();
 
-userRoutes.post("/register", userRegisterCtrl);
-userRoutes.post("/login", loginUserCtrl);
-userRoutes.put(
+userRoute.post("/register", userRegisterCtrl);
+userRoute.post("/login", loginUserCtrl);
+userRoute.put(
   "/profilephoto-upload",
   authMiddleware,
   PhotoUpload.single("image"),
   profilePhotoResize,
   profilePhotoUploadCtrl
 );
-userRoutes.get("/", authMiddleware, fetchUsersCtrl);
-userRoutes.post("/forget-password-token", forgetPasswordToken);
-userRoutes.put("/reset-password", passwordResetCtrl);
-userRoutes.put("/password", authMiddleware, updateUserPasswordCtrl);
-userRoutes.put("/follow", authMiddleware, followingUserCtrl);
-userRoutes.post(
+userRoute.get("/", authMiddleware, fetchUsersCtrl);
+userRoute.post("/forget-password-token", forgetPasswordToken);
+userRoute.put("/reset-password", passwordResetCtrl);
+userRoute.put("/password", authMiddleware, updateUserPasswordCtrl);
+userRoute.put("/follow", authMiddleware, followingUserCtrl);
+userRoute.post(
   "/generate-verify-email-token",
   authMiddleware,
   generateVerificationTokenCtrl
 );
 
-userRoutes.put("/verify-account", authMiddleware, accountVerificationCtrl);
-userRoutes.put("/unfollow", authMiddleware, unfollowUserCtrl);
-userRoutes.put("/block-user/:id", authMiddleware, blockUserCtrl);
-userRoutes.put("/unblock-user/:id", authMiddleware, unBlockUserCtrl);
-userRoutes.get("/profile/:id", authMiddleware, userProfileCtrl);
-userRoutes.put("/:id", authMiddleware, updateUserCtrl);
-userRoutes.delete("/:id", deleteUsersCtrl);
-userRoutes.get("/:id", fetchUserDetailsCtrl);
+userRoute.put("/verify-account", authMiddleware, accountVerificationCtrl);
+userRoute.put("/unfollow", authMiddleware, unfollowUserCtrl);
+userRoute.put("/block-user/:id", authMiddleware, blockUserCtrl);
+userRoute.put("/unblock-user/:id", authMiddleware, unBlockUserCtrl);
+userRoute.get("/profile/:id", authMiddleware, userProfileCtrl);
+userRoute.put("/:id", authMiddleware, updateUserCtrl);
+userRoute.delete("/:id", deleteUsersCtrl);
+userRoute.get("/:id", fetchUserDetailsCtrl);
 
-module.exports = userRoutes;
+module.exports = userRoute;
