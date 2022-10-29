@@ -55,9 +55,23 @@ const uptadeCategory = expressAsyncHandler(async (req, res) => {
   }
 });
 
+const deleteCategory = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const categoryDeleted = await Category.findByIdAndDelete(id, {
+      new: true,
+      runValidators: true,
+    });
+    res.json(categoryDeleted);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 module.exports = {
   createCategory,
   getAllCategories,
   getOneCategory,
   uptadeCategory,
+  deleteCategory,
 };
