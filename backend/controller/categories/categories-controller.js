@@ -13,4 +13,13 @@ const createCategory = expressAsyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createCategory };
+const getAllCategories = expressAsyncHandler(async (req, res) => {
+  try {
+    const categories = await Category.find({});
+    res.json(categories);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = { createCategory, getAllCategories };
