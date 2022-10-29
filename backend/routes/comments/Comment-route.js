@@ -4,6 +4,7 @@ const {
   getAllComments,
   getOneComment,
   updateComment,
+  deleteComment,
 } = require("../../controller/comments/comment-controller");
 const authMiddleware = require("../../middlewares/Auth/authMiddleware");
 
@@ -13,5 +14,6 @@ commentRoute.post("/", authMiddleware, createComment);
 commentRoute.get("/", authMiddleware, getAllComments);
 commentRoute.get("/:id", authMiddleware, getOneComment);
 commentRoute.put("/:id", authMiddleware, updateComment);
+commentRoute.delete("/:id", authMiddleware, deleteComment);
 
 module.exports = commentRoute;
