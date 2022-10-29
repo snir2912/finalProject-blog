@@ -36,4 +36,28 @@ const getOneCategory = expressAsyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createCategory, getAllCategories, getOneCategory };
+const uptadeCategory = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const category = await Category.findByIdAndUpdate(
+      id,
+      {
+        title: req.body?.title,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.json(category);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = {
+  createCategory,
+  getAllCategories,
+  getOneCategory,
+  uptadeCategory,
+};
