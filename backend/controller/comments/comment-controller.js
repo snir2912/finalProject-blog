@@ -1,7 +1,5 @@
 const expressAsyncHandler = require("express-async-handler");
 const Comment = require("../../models/comment-model/comment-model");
-// const { post } = require("../../routes/comments/Comment-route");
-// const validateMongodbId = require("../../utils/validateMongodbId");
 
 const createComment = expressAsyncHandler(async (req, res) => {
   const user = req.user;
