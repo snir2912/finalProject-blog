@@ -26,4 +26,15 @@ const getAllComments = expressAsyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createComment, getAllComments };
+const getOneComment = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const comment = await Comment.findById(id);
+    res.json(comment);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = { createComment, getAllComments, getOneComment };
