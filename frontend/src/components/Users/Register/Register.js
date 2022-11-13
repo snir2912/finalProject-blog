@@ -12,14 +12,10 @@ const formSchema = Yup.object({
   email: Yup.string().required("Email is required"),
   password: Yup.string().required("Password is required"),
 });
-//-------------------------------
-//Register
-//-------------------------------
+
 const Register = () => {
-  //dispath
   const dispatch = useDispatch();
 
-  //formik
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -35,7 +31,6 @@ const Register = () => {
     validationSchema: formSchema,
   });
 
-  //select state from store
   const storeData = useSelector(store => store?.users);
   const { loading, appErr, serverErr, registered } = storeData;
 
