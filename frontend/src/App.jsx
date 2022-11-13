@@ -1,4 +1,5 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import AddNewCategory from "./components/categories/AddNewCategory";
 
 import HomePage from "./components/HomePage/HomePage";
 import Navbar from "./components/Navigation/Navbar";
@@ -13,6 +14,7 @@ function App() {
         <Route exact path='/' component={HomePage} />
         <Route exact path='/register' component={Register} />
         <Route exact path='/login' component={Login} />
+        <Route exact path='/add-category' component={AddNewCategory} />
       </Switch>
     </BrowserRouter>
   );
