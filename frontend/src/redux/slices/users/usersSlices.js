@@ -57,6 +57,21 @@ export const loginUserAction = createAsyncThunk(
 const userLoginFromSorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
+
+export const logoutAction = createAsyncThunk(
+  "/user/logout",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      localStorage.removeItem("userInfo");
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //slices
 
 const usersSlices = createSlice({
@@ -99,6 +114,22 @@ const usersSlices = createSlice({
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
+    });
+
+    // logout
+    builder.addCase(logoutAction.pending, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(logoutAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.userAuth = undefined;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(logoutAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
     });
   },
 });
