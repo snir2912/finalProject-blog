@@ -1,15 +1,25 @@
 import React from "react";
 import { useFormik } from "formik";
+import { Redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
+import { registerUserAction } from "../../../redux/slices/users/usersSlices";
 
+//Form schema
 const formSchema = Yup.object({
-  firstName: Yup.string().required("שם פרטי הוא שדה חובה"),
-  lastName: Yup.string().required("שם משפחה הוא שדה חובה"),
-  emsil: Yup.string().required('דוא"ל הוא שדה חובה'),
-  password: Yup.string().required("סיסמה הוא שדה חובה"),
+  firstName: Yup.string().required("First Name is required"),
+  lastName: Yup.string().required("Last Name is required"),
+  email: Yup.string().required("Email is required"),
+  password: Yup.string().required("Password is required"),
 });
-
+//-------------------------------
+//Register
+//-------------------------------
 const Register = () => {
+  //dispath
+  const dispatch = useDispatch();
+
+  //formik
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -18,10 +28,22 @@ const Register = () => {
       password: "",
     },
     onSubmit: values => {
+      //dispath the action
+      dispatch(registerUserAction(values));
       console.log(values);
     },
     validationSchema: formSchema,
   });
+
+  //select state from store
+  const storeData = useSelector(store => store?.users);
+  const { loading, appErr, serverErr, registered } = storeData;
+
+  //redirect
+  if (registered) {
+    return <Redirect to='/profile' />;
+  }
+
   return (
     <section className='relative py-20 2xl:py-40 bg-gray-800 overflow-hidden'>
       <div className='relative container px-4 mx-auto'>
@@ -30,10 +52,10 @@ const Register = () => {
             <div className='w-full lg:w-1/2 px-4 mb-16 lg:mb-0'>
               <div className='max-w-md'>
                 <span className='text-lg text-blue-400 font-bold'>
-                  הרשמה לאתר
+                  Register Account
                 </span>
                 <h2 className='mt-8 mb-12 text-5xl font-bold font-heading text-white'>
-                  צרו חשבון והתחילו לפרסם באתר!
+                  Create an account and start pending down your ideas
                 </h2>
               </div>
             </div>
@@ -41,11 +63,18 @@ const Register = () => {
               <div className='px-6 lg:px-20 py-12 lg:py-24 bg-gray-600 rounded-lg'>
                 <form onSubmit={formik.handleSubmit}>
                   <h3 className='mb-10 text-2xl text-white font-bold font-heading'>
-                    טופס הרשמה
+                    Register Account
+                    {/* display error message*/}
+                    {appErr || serverErr ? (
+                      <div className='text-red-400'>
+                        {serverErr} {appErr}
+                      </div>
+                    ) : null}
                   </h3>
+
                   {/* First name */}
                   <div className='flex items-center pl-6 mb-3 bg-white rounded-full'>
-                    <span className='inline-block pr-3 py-2 border-gray-50'>
+                    <span className='inline-block pr-3 py-2 border-r border-gray-50'>
                       <svg
                         className='w-5 h-5'
                         width='20'
@@ -89,7 +118,7 @@ const Register = () => {
                       onBlur={formik.handleBlur("firstName")}
                       className='w-full pl-4 pr-6 py-4 font-bold placeholder-gray-300 rounded-r-full focus:outline-none'
                       type='firstName'
-                      placeholder='שם פרטי'
+                      placeholder='First Name'
                     />
                   </div>
                   {/* Err msg*/}
@@ -98,10 +127,7 @@ const Register = () => {
                   </div>
                   {/* Last name */}
                   <div className='flex items-center pl-6 mb-3 bg-white rounded-full'>
-                    <span
-                      className='inline-block pr-3 py-2 
-                     border-gray-50'
-                    >
+                    <span className='inline-block pr-3 py-2 border-r border-gray-50'>
                       <svg
                         className='w-5 h-5'
                         width='20'
@@ -145,7 +171,7 @@ const Register = () => {
                       onBlur={formik.handleBlur("lastName")}
                       className='w-full pl-4 pr-6 py-4 font-bold placeholder-gray-300 rounded-r-full focus:outline-none'
                       type='lastName'
-                      placeholder='שם משפחה'
+                      placeholder='Last Name'
                     />
                   </div>
                   {/* Err msg*/}
@@ -154,7 +180,7 @@ const Register = () => {
                   </div>
                   {/* Email */}
                   <div className='flex items-center pl-6 mb-3 bg-white rounded-full'>
-                    <span className='inline-block pr-3 py-2 border-gray-50'>
+                    <span className='inline-block pr-3 py-2 border-r border-gray-50'>
                       <svg
                         className='w-5 h-5'
                         width='20'
@@ -198,7 +224,7 @@ const Register = () => {
                       onBlur={formik.handleBlur("email")}
                       className='w-full pl-4 pr-6 py-4 font-bold placeholder-gray-300 rounded-r-full focus:outline-none'
                       type='email'
-                      placeholder='דואר אלקטרוני'
+                      placeholder='example@gmail.com'
                     />
                   </div>
                   {/* Err msg*/}
@@ -206,7 +232,7 @@ const Register = () => {
                     {formik.touched.email && formik.errors.email}
                   </div>
                   <div className='flex items-center pl-6 mb-3 bg-white rounded-full'>
-                    <span className='inline-block pr-3 py-2 border-gray-50'>
+                    <span className='inline-block pr-3 py-2 border-r border-gray-50'>
                       <svg
                         className='w-5 h-5'
                         width='17'
@@ -231,7 +257,7 @@ const Register = () => {
                       onBlur={formik.handleBlur("password")}
                       className='w-full pl-4 pr-6 py-4 font-bold placeholder-gray-300 rounded-r-full focus:outline-none'
                       type='password'
-                      placeholder='סיסמה'
+                      placeholder='Password'
                     />
                   </div>
                   {/* Err msg*/}
@@ -241,12 +267,22 @@ const Register = () => {
 
                   <div className='inline-flex mb-10'></div>
 
-                  <button
-                    type='submit'
-                    className='py-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200'
-                  >
-                    הרשמה
-                  </button>
+                  {/* Check for loading */}
+                  {loading ? (
+                    <button
+                      disabled
+                      className='py-4 w-full bg-gray-500  text-white font-bold rounded-full transition duration-200'
+                    >
+                      loading please wait...
+                    </button>
+                  ) : (
+                    <button
+                      type='submit'
+                      className='py-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200'
+                    >
+                      Register
+                    </button>
+                  )}
                 </form>
               </div>
             </div>
