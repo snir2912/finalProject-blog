@@ -1,7 +1,9 @@
 import React from "react";
 import { useFormik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import poster from "../../../img/poster.png";
+import { loginUserAction } from "../../../redux/slices/users/usersSlices";
 
 const formSchema = Yup.object({
   email: Yup.string().required("Email is required"),
@@ -9,13 +11,14 @@ const formSchema = Yup.object({
 });
 
 const Login = () => {
+  const dispach = useDispatch();
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     onSubmit: values => {
-      console.log(values);
+      dispach(loginUserAction(values));
     },
     validationSchema: formSchema,
   });
