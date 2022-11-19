@@ -1,6 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
+
+//action to redirect
+const resetEditAction = createAction("category/reset");
+const resetDeleteAction = createAction("category/delete-reset");
+const resetCategoryAction = createAction("category/created-reset");
 
 //action
 export const createCategoryAction = createAsyncThunk(
@@ -23,6 +28,8 @@ export const createCategoryAction = createAsyncThunk(
         },
         config
       );
+      //disoatch action
+      dispatch(resetCategoryAction());
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -33,8 +40,8 @@ export const createCategoryAction = createAsyncThunk(
   }
 );
 
-//action
-export const getCategoriesAction = createAsyncThunk(
+//fetch all action
+export const fetchCategoriesAction = createAsyncThunk(
   "category/fetch",
   async (category, { rejectWithValue, getState, dispatch }) => {
     //get user token
@@ -58,9 +65,10 @@ export const getCategoriesAction = createAsyncThunk(
   }
 );
 
-export const updateCategoryAction = createAsyncThunk(
+//Update
+export const updateCategoriesAction = createAsyncThunk(
   "category/update",
-  async (id, { rejectWithValue, getState, dispatch }) => {
+  async (category, { rejectWithValue, getState, dispatch }) => {
     //get user token
     const user = getState()?.users;
     const { userAuth } = user;
@@ -71,7 +79,13 @@ export const updateCategoryAction = createAsyncThunk(
     };
     //http call
     try {
-      const { data } = await axios.put(`${baseUrl}/api/category/${id}`, config);
+      const { data } = await axios.put(
+        `${baseUrl}/api/category/${category?.id}`,
+        { title: category?.title },
+        config
+      );
+      //dispatch ation to reset the updated data
+      dispatch(resetEditAction());
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -82,7 +96,8 @@ export const updateCategoryAction = createAsyncThunk(
   }
 );
 
-export const deleteCategoryAction = createAsyncThunk(
+//delete
+export const deleteCategoriesAction = createAsyncThunk(
   "category/delete",
   async (id, { rejectWithValue, getState, dispatch }) => {
     //get user token
@@ -99,6 +114,8 @@ export const deleteCategoryAction = createAsyncThunk(
         `${baseUrl}/api/category/${id}`,
         config
       );
+      //dispatch action
+      dispatch(resetDeleteAction());
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -109,8 +126,9 @@ export const deleteCategoryAction = createAsyncThunk(
   }
 );
 
-export const getOneCategoryAction = createAsyncThunk(
-  "category/dtails",
+//fetch details
+export const fetchCategoryAction = createAsyncThunk(
+  "category/details",
   async (id, { rejectWithValue, getState, dispatch }) => {
     //get user token
     const user = getState()?.users;
@@ -141,74 +159,99 @@ const categorySlices = createSlice({
     //create
     builder.addCase(createCategoryAction.pending, (state, action) => {
       state.loading = true;
+      state.isCreated = false;
+    });
+    //dispatch action to redirect
+    builder.addCase(resetCategoryAction, (state, action) => {
+      state.isCreated = true;
     });
     builder.addCase(createCategoryAction.fulfilled, (state, action) => {
       state.category = action?.payload;
+      state.isCreated = true;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
     builder.addCase(createCategoryAction.rejected, (state, action) => {
       state.loading = false;
+      state.isCreated = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
     //fetch all
-    builder.addCase(getCategoriesAction.pending, (state, action) => {
+    builder.addCase(fetchCategoriesAction.pending, (state, action) => {
       state.loading = true;
+      state.isCreated = false;
+      state.isEdited = false;
+      state.isDeleted = false;
     });
-    builder.addCase(getCategoriesAction.fulfilled, (state, action) => {
+    builder.addCase(fetchCategoriesAction.fulfilled, (state, action) => {
       state.categoryList = action?.payload;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
+      state.isEdited = false;
     });
-    builder.addCase(getCategoriesAction.rejected, (state, action) => {
+    builder.addCase(fetchCategoriesAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
     //update
-    builder.addCase(updateCategoryAction.pending, (state, action) => {
+    builder.addCase(updateCategoriesAction.pending, (state, action) => {
       state.loading = true;
     });
-    builder.addCase(updateCategoryAction.fulfilled, (state, action) => {
-      state.updatedCategory = action?.payload;
+    //Dispatch action
+    builder.addCase(resetEditAction, (state, action) => {
+      state.isEdited = true;
+    });
+    builder.addCase(updateCategoriesAction.fulfilled, (state, action) => {
+      state.updateCategory = action?.payload;
+      state.isEdited = true;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
-    builder.addCase(updateCategoryAction.rejected, (state, action) => {
+    builder.addCase(updateCategoriesAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
+
     //delete
-    builder.addCase(deleteCategoryAction.pending, (state, action) => {
+    builder.addCase(deleteCategoriesAction.pending, (state, action) => {
       state.loading = true;
+      state.isDeleted = false;
     });
-    builder.addCase(deleteCategoryAction.fulfilled, (state, action) => {
+    //dispatch for redirect
+    builder.addCase(resetDeleteAction, (state, action) => {
+      state.isDeleted = true;
+    });
+    builder.addCase(deleteCategoriesAction.fulfilled, (state, action) => {
       state.deletedCategory = action?.payload;
+      state.isDeleted = true;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
-    builder.addCase(deleteCategoryAction.rejected, (state, action) => {
+    builder.addCase(deleteCategoriesAction.rejected, (state, action) => {
       state.loading = false;
+      state.isDeleted = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
-    builder.addCase(getOneCategoryAction.pending, (state, action) => {
+
+    //fetch details
+    builder.addCase(fetchCategoryAction.pending, (state, action) => {
       state.loading = true;
     });
-    // getOneCategoryAction
-    builder.addCase(getOneCategoryAction.fulfilled, (state, action) => {
+    builder.addCase(fetchCategoryAction.fulfilled, (state, action) => {
       state.category = action?.payload;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
-    builder.addCase(getOneCategoryAction.rejected, (state, action) => {
+    builder.addCase(fetchCategoryAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;

@@ -1,16 +1,15 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-
 import { PencilAltIcon } from "@heroicons/react/outline";
-import { getCategoriesAction } from "../../redux/slices/category/categorySlice";
-// import DateFormatter from "../../utils/DateFormatter";
+import { fetchCategoriesAction } from "../../redux/slices/category/categorySlice";
+import DateFormatter from "../../utils/DateFormatter";
 import LoadingComponent from "../../utils/LoadingComponent";
 
 const CategoryList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getCategoriesAction());
+    dispatch(fetchCategoriesAction());
   }, [dispatch]);
   const category = useSelector(state => state?.category);
 
@@ -91,9 +90,9 @@ const CategoryList = () => {
                           {category.title}
                         </td>
                         <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                          {category?.createdAt}
+                          {<DateFormatter date={category?.createdAt} />}
                         </td>
-                        <Link>
+                        <Link to={`/update-category/${category?._id}`}>
                           <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                             <PencilAltIcon className='h-5 text-indigo-500' />
                           </td>
