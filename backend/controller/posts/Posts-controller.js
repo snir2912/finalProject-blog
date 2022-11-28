@@ -6,10 +6,13 @@ const User = require("../../models/user-model/User-model");
 const cloudinaryUploadImg = require("../../utils/cloudinary");
 
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
+  console.log(req.file);
   const { _id } = req.user;
+  //   validateMongodbId(req.body.user);
+  //Check for bad words
   const filter = new Filter();
   const isProfane = filter.isProfane(req.body.title, req.body.description);
-
+  //Block user
   if (isProfane) {
     await User.findByIdAndUpdate(_id, {
       isBlocked: true,
@@ -19,9 +22,16 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
     );
   }
 
-  const localPath = `public/img/posts/${req.file.filename}`;
-  const imgUploaded = await cloudinaryUploadImg(localPath);
+  // //1. Get the oath to img
+  // const localPath = `public/images/posts/${req.file.filename}`;
+  // //2.Upload to cloudinary
+  // const imgUploaded = await cloudinaryUploadImg(localPath);
   try {
+    const post = await Post.create({
+      ...req.body,
+
+      user: _id,
+    });
     res.json(imgUploaded);
     //Remove uploaded img
     fs.unlinkSync(localPath);

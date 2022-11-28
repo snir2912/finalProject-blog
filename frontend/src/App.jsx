@@ -1,8 +1,8 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import AddNewCategory from "./components/categories/AddNewCategory";
+import AddNewCategory from "./components/Categories/AddNewCategory";
 import HomePage from "./components/HomePage/HomePage";
 import Navbar from "./components/Navigation/Navbar";
-import Login from "./components/Users/login/Login";
+import Login from "./components/Users/Login/Login";
 import Register from "./components/Users/Register/Register";
 import CategoryList from "./components/Categories/CategoryList";
 import UpdateCategory from "./components/Categories/UpdateCategory";
