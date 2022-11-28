@@ -9,7 +9,7 @@ const override = css`
   border-color: red;
 `;
 const LoadingComponent = () => {
-  return <RiseLoader color='red' loading={true} css={override} />;
+  return <RiseLoader color="red" loading={true} css={override} />;
 };
 
 export default LoadingComponent;

@@ -1,3 +1,3 @@
-const baseUrl = "http://localhost:7777";
+const baseUrl = "http://localhost:5000";
 
 export default baseUrl;

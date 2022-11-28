@@ -28,25 +28,27 @@ export const registerUserAction = createAsyncThunk(
   }
 );
 
+//Login
 export const loginUserAction = createAsyncThunk(
-  "users/login",
+  "user/login",
   async (userData, { rejectWithValue, getState, dispatch }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
-    //http call
     try {
+      //make http call
       const { data } = await axios.post(
         `${baseUrl}/api/users/login`,
         userData,
         config
       );
+      //save user into local storage
       localStorage.setItem("userInfo", JSON.stringify(data));
       return data;
     } catch (error) {
-      if (!error.response) {
+      if (!error?.response) {
         throw error;
       }
       return rejectWithValue(error?.response?.data);
@@ -54,9 +56,7 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
-const userLoginFromSorage = localStorage.getItem("userInfo")
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
+//Logout action
 
 export const logoutAction = createAsyncThunk(
   "/user/logout",
@@ -64,7 +64,7 @@ export const logoutAction = createAsyncThunk(
     try {
       localStorage.removeItem("userInfo");
     } catch (error) {
-      if (!error.response) {
+      if (!error?.response) {
         throw error;
       }
       return rejectWithValue(error?.response?.data);
@@ -72,12 +72,16 @@ export const logoutAction = createAsyncThunk(
   }
 );
 
-//slices
+//get user from local storage and place into store
+const userLoginFromStorage = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
 
+//slices
 const usersSlices = createSlice({
   name: "users",
   initialState: {
-    userAuth: userLoginFromSorage,
+    userAuth: userLoginFromStorage,
   },
   extraReducers: builder => {
     //register
@@ -93,6 +97,7 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(registerUserAction.rejected, (state, action) => {
+      console.log(action.payload);
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
@@ -111,25 +116,24 @@ const usersSlices = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(loginUserAction.rejected, (state, action) => {
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
       state.loading = false;
-      state.appErr = undefined;
-      state.serverErr = undefined;
     });
-
-    // logout
+    //logout
     builder.addCase(logoutAction.pending, (state, action) => {
       state.loading = false;
     });
     builder.addCase(logoutAction.fulfilled, (state, action) => {
-      state.loading = false;
       state.userAuth = undefined;
+      state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
     builder.addCase(logoutAction.rejected, (state, action) => {
-      state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
+      state.loading = false;
     });
   },
 });

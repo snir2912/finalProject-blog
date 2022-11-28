@@ -159,7 +159,6 @@ const categorySlices = createSlice({
     //create
     builder.addCase(createCategoryAction.pending, (state, action) => {
       state.loading = true;
-      state.isCreated = false;
     });
     //dispatch action to redirect
     builder.addCase(resetCategoryAction, (state, action) => {
@@ -167,30 +166,25 @@ const categorySlices = createSlice({
     });
     builder.addCase(createCategoryAction.fulfilled, (state, action) => {
       state.category = action?.payload;
-      state.isCreated = true;
+      state.isCreated = false;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
     builder.addCase(createCategoryAction.rejected, (state, action) => {
       state.loading = false;
-      state.isCreated = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
     //fetch all
     builder.addCase(fetchCategoriesAction.pending, (state, action) => {
       state.loading = true;
-      state.isCreated = false;
-      state.isEdited = false;
-      state.isDeleted = false;
     });
     builder.addCase(fetchCategoriesAction.fulfilled, (state, action) => {
       state.categoryList = action?.payload;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
-      state.isEdited = false;
     });
     builder.addCase(fetchCategoriesAction.rejected, (state, action) => {
       state.loading = false;
@@ -207,7 +201,7 @@ const categorySlices = createSlice({
     });
     builder.addCase(updateCategoriesAction.fulfilled, (state, action) => {
       state.updateCategory = action?.payload;
-      state.isEdited = true;
+      state.isEdited = false;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
@@ -221,7 +215,6 @@ const categorySlices = createSlice({
     //delete
     builder.addCase(deleteCategoriesAction.pending, (state, action) => {
       state.loading = true;
-      state.isDeleted = false;
     });
     //dispatch for redirect
     builder.addCase(resetDeleteAction, (state, action) => {
@@ -229,14 +222,13 @@ const categorySlices = createSlice({
     });
     builder.addCase(deleteCategoriesAction.fulfilled, (state, action) => {
       state.deletedCategory = action?.payload;
-      state.isDeleted = true;
+      state.isDeleted = false;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
     });
     builder.addCase(deleteCategoriesAction.rejected, (state, action) => {
       state.loading = false;
-      state.isDeleted = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });

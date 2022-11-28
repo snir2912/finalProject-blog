@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
-const AdminRoute = ({ component: Component, ...rest }) => {
+const PrivateProtectRoute = ({ component: Component, ...rest }) => {
   //check if user is loggin
   const user = useSelector(state => state?.users);
   const { userAuth } = user;
@@ -10,10 +10,10 @@ const AdminRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={() =>
-        userAuth?.isAdmin ? <Component {...rest} /> : <Redirect to="/login" />
+        userAuth ? <Component {...rest} /> : <Redirect to="/login" />
       }
     />
   );
 };
 
-export default AdminRoute;
+export default PrivateProtectRoute;
