@@ -4,9 +4,9 @@ import HomePage from "./components/HomePage/HomePage";
 import Navbar from "./components/Navigation/Navbar";
 import Login from "./components/Users/login/Login";
 import Register from "./components/Users/Register/Register";
-import CategoryList from "./components/categories/CategoryList";
-import UpdateCategory from "./components/categories/UpdateCategory";
-import PrivateProtectRoute from "./components/Navigation/ProtectedRoutes/PrivateProtectedRoute";
+import CategoryList from "./components/Categories/CategoryList";
+import UpdateCategory from "./components/Categories/UpdateCategory";
+import PrivateProtectRoute from "./components/Navigation/ProtectedRoutes/PrivateProtectRoute";
 import AdminRoute from "./components/Navigation/ProtectedRoutes/AdminRoute";
 import CreatePost from "./components/Posts/CreatePost";
 
