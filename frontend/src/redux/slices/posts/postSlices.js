@@ -3,7 +3,7 @@ import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 //Create Post action
 //action to redirect
-const resetPost = createAction("category/reset");
+const resetPost = createAction("post/reset");
 export const createpostAction = createAsyncThunk(
   "post/created",
   async (post, { rejectWithValue, getState, dispatch }) => {

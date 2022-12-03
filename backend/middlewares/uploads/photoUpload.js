@@ -20,7 +20,7 @@ const multerFilter = (req, file, cb) => {
 const PhotoUpload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
-  limits: { fileSize: 1000000 },
+  limits: { fileSize: 10000000 },
 });
 
 const profilePhotoResize = async (req, res, next) => {

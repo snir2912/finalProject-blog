@@ -9,6 +9,7 @@ import UpdateCategory from "./components/Categories/UpdateCategory";
 import PrivateProtectRoute from "./components/Navigation/ProtectedRoutes/PrivateProtectRoute";
 import AdminRoute from "./components/Navigation/ProtectedRoutes/AdminRoute";
 import CreatePost from "./components/Posts/CreatePost";
+import PostsList from "./components/Posts/PostList";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <PrivateProtectRoute exact path='/create-post' component={CreatePost} />
         <AdminRoute exact path='/add-category' component={AddNewCategory} />
         <AdminRoute exact path='/category-list' component={CategoryList} />
+        <Route exact path='/posts' component={PostsList} />
         <Route exact path='/' component={HomePage} />
         <Route exact path='/register' component={Register} />
         <Route exact path='/login' component={Login} />
