@@ -1,6 +1,20 @@
+import { useEffect } from "react";
 import { ThumbUpIcon, ThumbDownIcon, EyeIcon } from "@heroicons/react/solid";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchPostsAction } from "../../redux/slices/posts/postSlices";
+import DateFormatter from "../../utils/DateFormatter";
+
 export default function PostsList() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchPostsAction());
+  }, [dispatch]);
+
+  const post = useSelector(state => state?.post);
+
+  const { postLists, loading, appErr, serverErr } = post;
+  console.log(postLists);
   return (
     <>
       <section>
@@ -48,87 +62,105 @@ export default function PostsList() {
                 </div>
               </div>
               <div class='w-full lg:w-3/4 px-3'>
-                <div class='flex flex-wrap bg-gray-900 -mx-3  lg:mb-6'>
-                  <div class='mb-10  w-full lg:w-1/4 px-3'>
-                    <Link>
-                      {/* Post image */}
-                      <img
-                        class='w-full h-full object-cover rounded'
-                        src='https://cdn.pixabay.com/photo/2021/02/24/23/43/boy-6047786_960_720.jpg'
-                        alt=''
-                      />
-                    </Link>
-                    {/* Likes, views dislikes */}
-                    <div className='flex flex-row bg-gray-300 justify-center w-full  items-center '>
-                      {/* Likes */}
-                      <div className='flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1'>
-                        {/* Togle like  */}
-                        <div className=''>
-                          <ThumbUpIcon className='h-7 w-7 text-indigo-600 cursor-pointer' />
-                        </div>
-                        <div className='pl-2 text-gray-600'>(2)</div>
-                      </div>
-                      {/* Dislike */}
-                      <div className='flex flex-row  justify-center items-center ml-4 mr-4 pb-2 pt-1'>
-                        <div>
-                          <ThumbDownIcon className='h-7 w-7 cursor-pointer text-gray-600' />
-                        </div>
-                        <div className='pl-2 text-gray-600'>(2)</div>
-                      </div>
-                      {/* Views */}
-                      <div className='flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1'>
-                        <div>
-                          <EyeIcon className='h-7 w-7  text-gray-400' />
-                        </div>
-                        <div className='pl-2 text-gray-600'>
-                          {/* {post?.numViews} */}2
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class='w-full lg:w-3/4 px-3'>
-                    <Link class='hover:underline'>
-                      <h3 class='mb-1 text-2xl text-green-400 font-bold font-heading'>
-                        {/* {capitalizeWord(post?.title)} */} post title
-                      </h3>
-                    </Link>
-                    <p class='text-gray-300'>post description</p>
-                    {/* Read more */}
-                    <Link className='text-indigo-500 hover:underline'>
-                      Read More..
-                    </Link>
-                    {/* User Avatar */}
-                    <div className='mt-6 flex items-center'>
-                      <div className='flex-shrink-0'>
+                {/* Post goes here */}
+
+                {loading ? (
+                  <h1>Loading...</h1>
+                ) : appErr || serverErr ? (
+                  <h1>Err</h1>
+                ) : postLists?.lenght <= 0 ? (
+                  <h1>No Post Found</h1>
+                ) : (
+                  postLists?.map(post => (
+                    <div class='flex flex-wrap bg-gray-900 -mx-3  lg:mb-6'>
+                      <div class='mb-10  w-full lg:w-1/4 px-3'>
                         <Link>
+                          {/* Post image */}
                           <img
-                            className='h-10 w-10 rounded-full'
-                            src='https://cdn.pixabay.com/photo/2021/02/24/23/43/boy-6047786_960_720.jpg'
+                            class='w-full h-full object-cover rounded'
+                            src={post?.image}
                             alt=''
                           />
                         </Link>
-                      </div>
-                      <div className='ml-3'>
-                        <p className='text-sm font-medium text-gray-900'>
-                          <Link className='text-yellow-400 hover:underline '>
-                            user full name
-                          </Link>
-                        </p>
-                        <div className='flex space-x-1 text-sm text-green-500'>
-                          <time>
-                            {/* <DateFormatter date={post?.createdAt} /> */}
-                            Post date
-                          </time>
-                          <span aria-hidden='true'>&middot;</span>
+                        {/* Likes, views dislikes */}
+                        <div className='flex flex-row bg-gray-300 justify-center w-full  items-center '>
+                          {/* Likes */}
+                          <div className='flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1'>
+                            {/* Togle like  */}
+                            <div className=''>
+                              <ThumbUpIcon className='h-7 w-7 text-indigo-600 cursor-pointer' />
+                            </div>
+                            <div className='pl-2 text-gray-600'>
+                              {post?.likes?.lenght ? post?.likes?.lenght : 0}
+                            </div>
+                          </div>
+                          {/* Dislike */}
+                          <div className='flex flex-row  justify-center items-center ml-4 mr-4 pb-2 pt-1'>
+                            <div>
+                              <ThumbDownIcon className='h-7 w-7 cursor-pointer text-gray-600' />
+                            </div>
+                            <div className='pl-2 text-gray-600'>
+                              {post?.disLikes?.lenght
+                                ? post?.disLikes?.lenght
+                                : 0}
+                            </div>
+                          </div>
+                          {/* Views */}
+                          <div className='flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1'>
+                            <div>
+                              <EyeIcon className='h-7 w-7  text-gray-400' />
+                            </div>
+                            <div className='pl-2 text-gray-600'>
+                              {post?.numViews}
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      <div class='w-full lg:w-3/4 px-3'>
+                        <Link class='hover:underline'>
+                          <h3 class='mb-1 text-2xl text-green-400 font-bold font-heading'>
+                            {/* {capitalizeWord(post?.title)} */}
+                            {post?.title}
+                          </h3>
+                        </Link>
+                        <p class='text-gray-300'>{post?.description}</p>
+                        {/* Read more */}
+                        <Link className='text-indigo-500 hover:underline'>
+                          Read More..
+                        </Link>
+                        {/* User Avatar */}
+                        <div className='mt-6 flex items-center'>
+                          <div className='flex-shrink-0'>
+                            <Link>
+                              <img
+                                className='h-10 w-10 rounded-full'
+                                src={post?.user?.profilePhoto}
+                                alt=''
+                              />
+                            </Link>
+                          </div>
+                          <div className='ml-3'>
+                            <p className='text-sm font-medium text-gray-900'>
+                              <Link className='text-yellow-400 hover:underline '>
+                                {post?.user?.firstName} {post?.user?.lastName}
+                              </Link>
+                            </p>
+                            <div className='flex space-x-1 text-sm text-green-500'>
+                              <time>
+                                <DateFormatter date={post?.createdAt} />
+                              </time>
+                              <span aria-hidden='true'>&middot;</span>
+                            </div>
+                          </div>
+                        </div>
+                        {/* <p class="text-gray-500">
+                             Quisque id sagittis turpis. Nulla sollicitudin rutrum
+                             eros eu dictum...
+                           </p> */}
+                      </div>
                     </div>
-                    {/* <p class="text-gray-500">
-                          Quisque id sagittis turpis. Nulla sollicitudin rutrum
-                          eros eu dictum...
-                        </p> */}
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

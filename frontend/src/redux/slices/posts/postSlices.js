@@ -1,14 +1,14 @@
 import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
-//Create Post action
-//action to redirect
-const resetPost = createAction("post/reset");
+
+const resetPost = createAction("category/reset");
+
 export const createpostAction = createAsyncThunk(
   "post/created",
   async (post, { rejectWithValue, getState, dispatch }) => {
     console.log(post);
-    //get user token
+
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -17,7 +17,6 @@ export const createpostAction = createAsyncThunk(
       },
     };
     try {
-      //http call
       const formData = new FormData();
       formData.append("title", post?.title);
       formData.append("description", post?.description);
@@ -29,7 +28,7 @@ export const createpostAction = createAsyncThunk(
         formData,
         config
       );
-      //dispatch action
+
       dispatch(resetPost());
       return data;
     } catch (error) {
@@ -39,7 +38,18 @@ export const createpostAction = createAsyncThunk(
   }
 );
 
-//slice
+export const fetchPostsAction = createAsyncThunk(
+  "post/list",
+  async (post, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.get(`${baseUrl}/api/posts`);
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
 const postSlice = createSlice({
   name: "post",
@@ -59,6 +69,21 @@ const postSlice = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(createpostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+
+    builder.addCase(fetchPostsAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchPostsAction.fulfilled, (state, action) => {
+      state.postLists = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(fetchPostsAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
