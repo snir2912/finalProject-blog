@@ -40,9 +40,11 @@ export const createpostAction = createAsyncThunk(
 
 export const fetchPostsAction = createAsyncThunk(
   "post/list",
-  async (post, { rejectWithValue, getState, dispatch }) => {
+  async (category, { rejectWithValue, getState, dispatch }) => {
     try {
-      const { data } = await axios.get(`${baseUrl}/api/posts`);
+      const { data } = await axios.get(
+        `${baseUrl}/api/posts?category=${category}`
+      );
       return data;
     } catch (error) {
       if (!error?.response) throw error;

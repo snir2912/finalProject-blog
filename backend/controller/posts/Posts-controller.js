@@ -38,10 +38,18 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 const getAllPosts = expressAsyncHandler(async (req, res) => {
+  const hasCategory = req.query.category;
   try {
-    const posts = await Post.find({}).populate("user");
-    res.json(posts);
-  } catch (error) {}
+    if (hasCategory) {
+      const posts = await Post.find({ category: hasCategory }).populate("user");
+      res.json(posts);
+    } else {
+      const posts = await Post.find({}).populate("user");
+      res.json(posts);
+    }
+  } catch (error) {
+    res.json(error);
+  }
 });
 
 const getSinglePostCtrl = expressAsyncHandler(async (req, res) => {
