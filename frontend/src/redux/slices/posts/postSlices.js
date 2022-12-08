@@ -40,6 +40,33 @@ export const createpostAction = createAsyncThunk(
   }
 );
 
+export const updatePostAction = createAsyncThunk(
+  "post/updated",
+  async (post, { rejectWithValue, getState, dispatch }) => {
+    console.log(post);
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      //http call
+      const { data } = await axios.put(
+        `${baseUrl}/api/posts/${post?.id}`,
+        post,
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //fetch all posts
 export const fetchPostsAction = createAsyncThunk(
   "post/list",
@@ -48,6 +75,19 @@ export const fetchPostsAction = createAsyncThunk(
       const { data } = await axios.get(
         `${baseUrl}/api/posts?category=${category}`
       );
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//fetch Post details
+export const fetchPostDetailsAction = createAsyncThunk(
+  "post/detail",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await axios.get(`${baseUrl}/api/posts/${id}`);
       return data;
     } catch (error) {
       if (!error?.response) throw error;
@@ -134,6 +174,22 @@ const postSlice = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
+    //Update post
+    builder.addCase(updatePostAction.pending, (state, action) => {
+      state.loading = true;
+    });
+
+    builder.addCase(updatePostAction.fulfilled, (state, action) => {
+      state.postUpdated = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(updatePostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
     //fetch posts
     builder.addCase(fetchPostsAction.pending, (state, action) => {
       state.loading = true;
@@ -145,6 +201,22 @@ const postSlice = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(fetchPostsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+
+    //fetch post Details
+    builder.addCase(fetchPostDetailsAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchPostDetailsAction.fulfilled, (state, action) => {
+      state.postDetails = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(fetchPostDetailsAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
