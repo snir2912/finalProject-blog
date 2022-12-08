@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
-
+//Create Post action
+//action to redirect
 const resetPost = createAction("category/reset");
 
 export const createpostAction = createAsyncThunk(
   "post/created",
   async (post, { rejectWithValue, getState, dispatch }) => {
     console.log(post);
-
+    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -17,6 +18,7 @@ export const createpostAction = createAsyncThunk(
       },
     };
     try {
+      //http call
       const formData = new FormData();
       formData.append("title", post?.title);
       formData.append("description", post?.description);
@@ -28,7 +30,7 @@ export const createpostAction = createAsyncThunk(
         formData,
         config
       );
-
+      //dispatch action
       dispatch(resetPost());
       return data;
     } catch (error) {
@@ -38,6 +40,7 @@ export const createpostAction = createAsyncThunk(
   }
 );
 
+//fetch all posts
 export const fetchPostsAction = createAsyncThunk(
   "post/list",
   async (category, { rejectWithValue, getState, dispatch }) => {
@@ -53,10 +56,66 @@ export const fetchPostsAction = createAsyncThunk(
   }
 );
 
+//Add Likes to post
+export const toggleAddLikesToPost = createAsyncThunk(
+  "post/like",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/posts/likes`,
+        { postId },
+        config
+      );
+
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//Add DisLikes to post
+export const toggleAddDisLikesToPost = createAsyncThunk(
+  "post/dislike",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/posts/dislikes`,
+        { postId },
+        config
+      );
+
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//slice
 const postSlice = createSlice({
   name: "post",
   initialState: {},
   extraReducers: builder => {
+    //create post
     builder.addCase(createpostAction.pending, (state, action) => {
       state.loading = true;
     });
@@ -75,7 +134,7 @@ const postSlice = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
-
+    //fetch posts
     builder.addCase(fetchPostsAction.pending, (state, action) => {
       state.loading = true;
     });
@@ -86,6 +145,36 @@ const postSlice = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(fetchPostsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+    //Likes
+    builder.addCase(toggleAddLikesToPost.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(toggleAddLikesToPost.fulfilled, (state, action) => {
+      state.likes = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(toggleAddLikesToPost.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+    //DisLikes
+    builder.addCase(toggleAddDisLikesToPost.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(toggleAddDisLikesToPost.fulfilled, (state, action) => {
+      state.dislikes = action?.payload;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(toggleAddDisLikesToPost.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
