@@ -31,7 +31,10 @@ export default function UpdatePost(props) {
   //selet post
   const postData = useSelector(state => state.post);
   const { postDetails } = postData;
-  console.log(postDetails);
+
+  //select updated post from store;
+  const postUpdate = useSelector(state => state.post);
+  const { loading, appErr, serverErr, isUpdated } = postUpdate;
   //formik
   const formik = useFormik({
     enableReinitialize: true,
@@ -50,14 +53,22 @@ export default function UpdatePost(props) {
     },
     validationSchema: formSchema,
   });
+
+  //redirect
+  if (isUpdated) return <Redirect to='/posts' />;
   return (
     <>
       <div className='min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
         <div className='sm:mx-auto sm:w-full sm:max-w-md'>
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-300'>
-            Are you sure you want to edit{" "}
+            Are you sure you want to edit {""}
             <span className='text-green-300'>{postDetails?.title}</span>
           </h2>
+          {appErr || serverErr ? (
+            <h1 className='text-red-400 text-xl text-center'>
+              {serverErr} {appErr}
+            </h1>
+          ) : null}
         </div>
 
         <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
@@ -116,12 +127,21 @@ export default function UpdatePost(props) {
               </div>
 
               <div>
-                <button
-                  type='submit'
-                  className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                >
-                  Update
-                </button>
+                {loading ? (
+                  <button
+                    disabled
+                    className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 '
+                  >
+                    Loading please wait...
+                  </button>
+                ) : (
+                  <button
+                    type='submit'
+                    className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                  >
+                    Update
+                  </button>
+                )}
               </div>
             </form>
           </div>

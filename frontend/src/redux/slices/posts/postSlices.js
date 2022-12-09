@@ -4,11 +4,13 @@ import baseUrl from "../../../utils/baseURL";
 //Create Post action
 //action to redirect
 const resetPost = createAction("category/reset");
+const resetPostEdit = createAction("post/reset");
 
+//Create
 export const createpostAction = createAsyncThunk(
   "post/created",
   async (post, { rejectWithValue, getState, dispatch }) => {
-    console.log(post);
+    // console.log(post);
     //get user token
     const user = getState()?.users;
     const { userAuth } = user;
@@ -22,7 +24,7 @@ export const createpostAction = createAsyncThunk(
       const formData = new FormData();
       formData.append("title", post?.title);
       formData.append("description", post?.description);
-      formData.append("category", post?.category?.label);
+      formData.append("category", post?.category);
       formData.append("image", post?.image);
 
       const { data } = await axios.post(
@@ -40,6 +42,7 @@ export const createpostAction = createAsyncThunk(
   }
 );
 
+//Update
 export const updatePostAction = createAsyncThunk(
   "post/updated",
   async (post, { rejectWithValue, getState, dispatch }) => {
@@ -59,6 +62,8 @@ export const updatePostAction = createAsyncThunk(
         post,
         config
       );
+      //dispatch
+      dispatch(resetPostEdit());
       return data;
     } catch (error) {
       if (!error?.response) throw error;
@@ -169,21 +174,20 @@ const postSlice = createSlice({
       state.appErr = undefined;
       state.serverErr = undefined;
     });
-    builder.addCase(createpostAction.rejected, (state, action) => {
-      state.loading = false;
-      state.appErr = action?.payload?.message;
-      state.serverErr = action?.error?.message;
-    });
+
     //Update post
     builder.addCase(updatePostAction.pending, (state, action) => {
       state.loading = true;
     });
-
+    builder.addCase(resetPostEdit, (state, action) => {
+      state.isUpdated = true;
+    });
     builder.addCase(updatePostAction.fulfilled, (state, action) => {
       state.postUpdated = action?.payload;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
+      state.isUpdated = false;
     });
     builder.addCase(updatePostAction.rejected, (state, action) => {
       state.loading = false;
