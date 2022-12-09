@@ -46,7 +46,7 @@ export default function CreatePost() {
     },
     onSubmit: values => {
       //dispath the action
-      console.log(values);
+
       const data = {
         category: values?.category?.label,
         title: values?.title,
