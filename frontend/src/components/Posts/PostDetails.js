@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import DateFormatter from "../../utils/DateFormatter";
 import LoadingComponent from "../../utils/LoadingComponent";
 import AddComment from "../Comments/AddComment";
+import CommentsList from "../Comments/CommentsList";
 
 const PostDetails = ({
   match: {
@@ -16,13 +17,14 @@ const PostDetails = ({
   },
 }) => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchPostDetailsAction(id));
-  }, [id, dispatch]);
 
   //select post details from store
   const post = useSelector(state => state?.post);
   const { postDetails, loading, appErr, serverErr, isDeleted } = post;
+  console.log(postDetails?.comments);
+  useEffect(() => {
+    dispatch(fetchPostDetailsAction(id));
+  }, [id, dispatch]);
 
   //Get login user
   const user = useSelector(state => state.users);
@@ -106,7 +108,7 @@ const PostDetails = ({
           <AddComment postId={id} />
           <div className='flex justify-center  items-center'>
             {/* <CommentsList comments={post?.comments} postId={post?._id} /> */}
-            CommentsList
+            <CommentsList comments={postDetails?.comments} />
           </div>
         </section>
       )}
