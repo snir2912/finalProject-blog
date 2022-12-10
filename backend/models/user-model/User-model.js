@@ -127,7 +127,7 @@ userSchema.methods.createAccountVerificationToken = async function () {
     .createHash("sha256")
     .update(verificationToken)
     .digest("hex");
-  this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000; //10 minutes
+  this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000;
   return verificationToken;
 };
 
@@ -137,7 +137,7 @@ userSchema.methods.createPasswordResetToken = async function () {
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  this.passwordResetExpires = Date.now() + 30 * 60 * 1000; //10 minutes
+  this.passwordResetExpires = Date.now() + 30 * 60 * 1000;
   return resetToken;
 };
 
