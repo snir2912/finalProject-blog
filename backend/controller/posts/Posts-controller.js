@@ -11,7 +11,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 
   const filter = new Filter();
   const isProfane = filter.isProfane(req.body.title, req.body.description);
-  //Block user
+
   if (isProfane) {
     await User.findByIdAndUpdate(_id, {
       isBlocked: true,

@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/solid";
-import { fetchPostDetailsAction } from "../../redux/slices/posts/postSlices";
+import {
+  deletePostAction,
+  fetchPostDetailsAction,
+} from "../../redux/slices/posts/postSlices";
 import { useDispatch, useSelector } from "react-redux";
 import DateFormatter from "../../utils/DateFormatter";
 import LoadingComponent from "../../utils/LoadingComponent";
@@ -18,7 +21,9 @@ const PostDetails = ({
 
   //select post details from store
   const post = useSelector(state => state?.post);
-  const { postDetails, loading, appErr, serverErr } = post;
+  const { postDetails, loading, appErr, serverErr, isDeleted } = post;
+  //redirect
+  if (isDeleted) return <Redirect to='/posts' />;
   return (
     <>
       {loading ? (
@@ -72,7 +77,12 @@ const PostDetails = ({
                     <Link to={`/update-post/${postDetails?._id}`} class='p-3'>
                       <PencilAltIcon class='h-8 mt-3 text-yellow-300' />
                     </Link>
-                    <button class='ml-3'>
+                    <button
+                      onClick={() =>
+                        dispatch(deletePostAction(postDetails?._id))
+                      }
+                      class='ml-3'
+                    >
                       <TrashIcon class='h-8 mt-3 text-red-600' />
                     </button>
                   </p>

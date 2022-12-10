@@ -2,9 +2,11 @@ import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 //Create Post action
+
 //action to redirect
 const resetPost = createAction("category/reset");
 const resetPostEdit = createAction("post/reset");
+const resetPostDelete = createAction("post/delete");
 
 //Create
 export const createpostAction = createAsyncThunk(
@@ -64,6 +66,34 @@ export const updatePostAction = createAsyncThunk(
       );
       //dispatch
       dispatch(resetPostEdit());
+      return data;
+    } catch (error) {
+      if (!error?.response) throw error;
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//Delete
+export const deletePostAction = createAsyncThunk(
+  "post/delete",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    try {
+      //http call
+      const { data } = await axios.delete(
+        `${baseUrl}/api/posts/${postId}`,
+        config
+      );
+      //dispatch
+      dispatch(resetPostDelete());
       return data;
     } catch (error) {
       if (!error?.response) throw error;
@@ -194,6 +224,27 @@ const postSlice = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
+
+    //Delete post
+    builder.addCase(deletePostAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(resetPostDelete, (state, action) => {
+      state.isDeleted = true;
+    });
+    builder.addCase(deletePostAction.fulfilled, (state, action) => {
+      state.postUpdated = action?.payload;
+      state.isDeleted = false;
+      state.loading = false;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(deletePostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+
     //fetch posts
     builder.addCase(fetchPostsAction.pending, (state, action) => {
       state.loading = true;
