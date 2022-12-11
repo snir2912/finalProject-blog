@@ -33,10 +33,9 @@ const Container = styled.div`
 export default function CreatePost() {
   const dispatch = useDispatch();
 
-  //select store data
   const post = useSelector(state => state?.post);
   const { isCreated, loading, appErr, serverErr } = post;
-  //formik
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -45,8 +44,6 @@ export default function CreatePost() {
       image: "",
     },
     onSubmit: values => {
-      //dispath the action
-
       const data = {
         category: values?.category?.label,
         title: values?.title,
@@ -58,7 +55,6 @@ export default function CreatePost() {
     validationSchema: formSchema,
   });
 
-  //redirect
   if (isCreated) return <Redirect to='/posts' />;
   return (
     <>
@@ -92,7 +88,6 @@ export default function CreatePost() {
                   Title
                 </label>
                 <div className='mt-1'>
-                  {/* Title */}
                   <input
                     value={formik.values.title}
                     onChange={formik.handleChange("title")}
@@ -104,12 +99,12 @@ export default function CreatePost() {
                     className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
                   />
                 </div>
-                {/* Err msg */}
+
                 <div className='text-red-500'>
                   {formik?.touched?.title && formik?.errors?.title}
                 </div>
               </div>
-              {/* Category input goes here */}
+
               <label
                 htmlFor='password'
                 className='block text-sm font-medium text-gray-700'
@@ -130,7 +125,7 @@ export default function CreatePost() {
                 >
                   Description
                 </label>
-                {/* Description */}
+
                 <textarea
                   value={formik.values.description}
                   onChange={formik.handleChange("description")}
@@ -140,7 +135,7 @@ export default function CreatePost() {
                   className='rounded-lg appearance-none block w-full py-3 px-3 text-base text-center leading-tight text-gray-600 bg-transparent focus:bg-transparent  border border-gray-200 focus:border-gray-500  focus:outline-none'
                   type='text'
                 ></textarea>
-                {/* Image component */}
+
                 <label
                   htmlFor='password'
                   className='block text-sm font-medium mt-3 mb-2 text-gray-700'
@@ -172,13 +167,12 @@ export default function CreatePost() {
                     )}
                   </Dropzone>
                 </Container>
-                {/* Err msg */}
+
                 <div className='text-red-500'>
                   {formik?.touched?.description && formik.errors?.description}
                 </div>
               </div>
               <div>
-                {/* Submit btn */}
                 {loading ? (
                   <button
                     disabled

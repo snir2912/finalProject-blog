@@ -18,7 +18,6 @@ const PostDetails = ({
 }) => {
   const dispatch = useDispatch();
 
-  //select post details from store
   const post = useSelector(state => state?.post);
   const { postDetails, loading, appErr, serverErr, isDeleted } = post;
   console.log(postDetails?.comments);
@@ -26,7 +25,6 @@ const PostDetails = ({
     dispatch(fetchPostDetailsAction(id));
   }, [id, dispatch]);
 
-  //Get login user
   const user = useSelector(state => state.users);
   const {
     userAuth: { _id },
@@ -34,7 +32,7 @@ const PostDetails = ({
 
   const isCreatedBy = postDetails?.user?._id === _id;
   console.log(isCreatedBy);
-  //redirect
+
   if (isDeleted) return <Redirect to='/posts' />;
   return (
     <>
@@ -49,7 +47,6 @@ const PostDetails = ({
       ) : (
         <section className='py-20 2xl:py-40 bg-gray-800 overflow-hidden'>
           <div className='container px-4 mx-auto'>
-            {/* Post Image */}
             <img
               className='mb-24 w-full h-96 object-cover'
               src={postDetails?.image}
@@ -60,7 +57,6 @@ const PostDetails = ({
                 {postDetails?.title}
               </h2>
 
-              {/* User */}
               <div className='inline-flex pt-14 mb-14 items-center border-t border-gray-500'>
                 <img
                   className='mr-8 w-20 lg:w-24 h-20 lg:h-24 rounded-full'
@@ -79,12 +75,11 @@ const PostDetails = ({
                   </p>
                 </div>
               </div>
-              {/* Post description */}
+
               <div class='max-w-xl mx-auto'>
                 <p class='mb-6 text-left  text-xl text-gray-200'>
                   {postDetails?.description}
 
-                  {/* Show delete and update  if it was created by the user */}
                   {isCreatedBy ? (
                     <p class='flex'>
                       <Link to={`/update-post/${postDetails?._id}`} class='p-3'>
@@ -104,10 +99,9 @@ const PostDetails = ({
               </div>
             </div>
           </div>
-          {/* Add comment Form component here */}
+
           <AddComment postId={id} />
           <div className='flex justify-center  items-center'>
-            {/* <CommentsList comments={post?.comments} postId={post?._id} /> */}
             <CommentsList comments={postDetails?.comments} />
           </div>
         </section>

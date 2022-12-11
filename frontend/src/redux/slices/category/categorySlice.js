@@ -2,16 +2,13 @@ import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 
-//action to redirect
 const resetEditAction = createAction("category/reset");
 const resetDeleteAction = createAction("category/delete-reset");
 const resetCategoryAction = createAction("category/created-reset");
 
-//action
 export const createCategoryAction = createAsyncThunk(
   "category/create",
   async (category, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -19,7 +16,7 @@ export const createCategoryAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.post(
         `${baseUrl}/api/category`,
@@ -28,7 +25,7 @@ export const createCategoryAction = createAsyncThunk(
         },
         config
       );
-      //disoatch action
+
       dispatch(resetCategoryAction());
       return data;
     } catch (error) {
@@ -40,11 +37,9 @@ export const createCategoryAction = createAsyncThunk(
   }
 );
 
-//fetch all action
 export const fetchCategoriesAction = createAsyncThunk(
   "category/fetch",
   async (category, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -52,7 +47,7 @@ export const fetchCategoriesAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.get(`${baseUrl}/api/category`, config);
       return data;
@@ -65,11 +60,9 @@ export const fetchCategoriesAction = createAsyncThunk(
   }
 );
 
-//Update
 export const updateCategoriesAction = createAsyncThunk(
   "category/update",
   async (category, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -77,14 +70,14 @@ export const updateCategoriesAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/category/${category?.id}`,
         { title: category?.title },
         config
       );
-      //dispatch ation to reset the updated data
+
       dispatch(resetEditAction());
       return data;
     } catch (error) {
@@ -96,11 +89,9 @@ export const updateCategoriesAction = createAsyncThunk(
   }
 );
 
-//delete
 export const deleteCategoriesAction = createAsyncThunk(
   "category/delete",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -108,13 +99,11 @@ export const deleteCategoriesAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
     try {
       const { data } = await axios.delete(
         `${baseUrl}/api/category/${id}`,
         config
       );
-      //dispatch action
       dispatch(resetDeleteAction());
       return data;
     } catch (error) {
@@ -126,11 +115,9 @@ export const deleteCategoriesAction = createAsyncThunk(
   }
 );
 
-//fetch details
 export const fetchCategoryAction = createAsyncThunk(
   "category/details",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -138,7 +125,7 @@ export const fetchCategoryAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.get(`${baseUrl}/api/category/${id}`, config);
       return data;
@@ -150,7 +137,6 @@ export const fetchCategoryAction = createAsyncThunk(
     }
   }
 );
-//slices
 
 const categorySlices = createSlice({
   name: "category",

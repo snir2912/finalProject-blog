@@ -27,10 +27,6 @@ export default function CommentsList({ comments }) {
                           {comment?.user?.firstName} {comment?.user?.lastName}
                         </h3>
                         <p className='text-bold text-yellow-500 text-base ml-5'>
-                          {/* <Moment fromNow ago>
-                      {comment?.createdAt}
-                    </Moment> */}
-
                           <Moment fromNow ago>
                             {comment?.createdAt}
                           </Moment>
@@ -39,7 +35,6 @@ export default function CommentsList({ comments }) {
                       <p className='text-sm text-gray-400'>
                         {comment?.description}
                       </p>
-                      {/* Check if is the same user created this comment */}
 
                       <p class='flex'>
                         <Link class='p-3'>

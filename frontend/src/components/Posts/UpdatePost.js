@@ -9,7 +9,6 @@ import {
   updatePostAction,
 } from "../../redux/slices/posts/postSlices";
 
-//Validation
 const formSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
@@ -22,20 +21,19 @@ export default function UpdatePost(props) {
       params: { id },
     },
   } = props;
-  //Fetch the post in the url
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchPostDetailsAction(id));
   }, [id, dispatch]);
-  //selet post
+
   const postData = useSelector(state => state.post);
   const { postDetails } = postData;
 
-  //select updated post from store;
   const postUpdate = useSelector(state => state.post);
   const { loading, appErr, serverErr, isUpdated } = postUpdate;
-  //formik
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -54,7 +52,6 @@ export default function UpdatePost(props) {
     validationSchema: formSchema,
   });
 
-  //redirect
   if (isUpdated) return <Redirect to='/posts' />;
   return (
     <>

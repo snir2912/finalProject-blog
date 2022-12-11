@@ -1,19 +1,14 @@
 import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
-//Create Post action
 
-//action to redirect
 const resetPost = createAction("category/reset");
 const resetPostEdit = createAction("post/reset");
 const resetPostDelete = createAction("post/delete");
 
-//Create
 export const createpostAction = createAsyncThunk(
   "post/created",
   async (post, { rejectWithValue, getState, dispatch }) => {
-    // console.log(post);
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -22,7 +17,6 @@ export const createpostAction = createAsyncThunk(
       },
     };
     try {
-      //http call
       const formData = new FormData();
       formData.append("title", post?.title);
       formData.append("description", post?.description);
@@ -34,7 +28,7 @@ export const createpostAction = createAsyncThunk(
         formData,
         config
       );
-      //dispatch action
+
       dispatch(resetPost());
       return data;
     } catch (error) {
@@ -44,12 +38,11 @@ export const createpostAction = createAsyncThunk(
   }
 );
 
-//Update
 export const updatePostAction = createAsyncThunk(
   "post/updated",
   async (post, { rejectWithValue, getState, dispatch }) => {
     console.log(post);
-    //get user token
+
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -58,13 +51,12 @@ export const updatePostAction = createAsyncThunk(
       },
     };
     try {
-      //http call
       const { data } = await axios.put(
         `${baseUrl}/api/posts/${post?.id}`,
         post,
         config
       );
-      //dispatch
+
       dispatch(resetPostEdit());
       return data;
     } catch (error) {
@@ -74,11 +66,9 @@ export const updatePostAction = createAsyncThunk(
   }
 );
 
-//Delete
 export const deletePostAction = createAsyncThunk(
   "post/delete",
   async (postId, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -87,12 +77,11 @@ export const deletePostAction = createAsyncThunk(
       },
     };
     try {
-      //http call
       const { data } = await axios.delete(
         `${baseUrl}/api/posts/${postId}`,
         config
       );
-      //dispatch
+
       dispatch(resetPostDelete());
       return data;
     } catch (error) {
@@ -102,7 +91,6 @@ export const deletePostAction = createAsyncThunk(
   }
 );
 
-//fetch all posts
 export const fetchPostsAction = createAsyncThunk(
   "post/list",
   async (category, { rejectWithValue, getState, dispatch }) => {
@@ -117,7 +105,7 @@ export const fetchPostsAction = createAsyncThunk(
     }
   }
 );
-//fetch Post details
+
 export const fetchPostDetailsAction = createAsyncThunk(
   "post/detail",
   async (id, { rejectWithValue, getState, dispatch }) => {
@@ -131,11 +119,9 @@ export const fetchPostDetailsAction = createAsyncThunk(
   }
 );
 
-//Add Likes to post
 export const toggleAddLikesToPost = createAsyncThunk(
   "post/like",
   async (postId, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -158,11 +144,9 @@ export const toggleAddLikesToPost = createAsyncThunk(
   }
 );
 
-//Add DisLikes to post
 export const toggleAddDisLikesToPost = createAsyncThunk(
   "post/dislike",
   async (postId, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -185,7 +169,6 @@ export const toggleAddDisLikesToPost = createAsyncThunk(
   }
 );
 
-//slice
 const postSlice = createSlice({
   name: "post",
   initialState: {},

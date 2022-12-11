@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Hei buddy Password is required"],
+      required: [true, "Password is required"],
     },
     postCount: {
       type: Number,

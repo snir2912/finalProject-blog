@@ -2,11 +2,9 @@ import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 
-//create
 export const createCommentAction = createAsyncThunk(
   "comment/create",
   async (comment, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -14,7 +12,7 @@ export const createCommentAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.post(
         `${baseUrl}/api/comments`,
