@@ -42,15 +42,10 @@ const getOneComment = expressAsyncHandler(async (req, res) => {
 const updateComment = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
-
   try {
     const updateComment = await Comment.findByIdAndUpdate(
       id,
-      {
-        post: req.body.postId,
-        user: req?.user,
-        description: req?.body.description,
-      },
+      { user: req?.user, description: req?.body.description },
       { new: true, runValidators: true }
     );
     res.json(updateComment);

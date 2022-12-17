@@ -16,7 +16,7 @@ export default function PostsList() {
   const post = useSelector(state => state?.post);
   const { postLists, loading, appErr, serverErr, likes, dislikes } = post;
   console.log(postLists);
-
+  //select categories from store
   const category = useSelector(state => state?.category);
   const {
     categoryList,
@@ -24,13 +24,13 @@ export default function PostsList() {
     appErr: catAppErr,
     serverErr: catServerErr,
   } = category;
-
+  //dispatch
   const dispatch = useDispatch();
   //fetch post
   useEffect(() => {
     dispatch(fetchPostsAction(""));
   }, [dispatch, likes, dislikes]);
-
+  //fetch categories
   useEffect(() => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
@@ -50,6 +50,7 @@ export default function PostsList() {
                 </h2>
               </div>
               <div className=' block text-right w-1/2'>
+                {/* View All */}
                 <button
                   onClick={() => dispatch(fetchPostsAction(""))}
                   className='inline-block py-2 px-6 rounded-l-xl rounded-t-xl bg-green-600 hover:bg-green-700 text-gray-50 font-bold leading-loose transition duration-200'
@@ -93,6 +94,8 @@ export default function PostsList() {
                 </div>
               </div>
               <div class='w-full lg:w-3/4 px-3'>
+                {/* Post goes here */}
+
                 {appErr || serverErr ? (
                   <h1>
                     {serverErr} {appErr}
@@ -107,17 +110,20 @@ export default function PostsList() {
                       key={post.id}
                       className='flex flex-wrap bg-gray-900 -mx-3  lg:mb-6'
                     >
-                      <div className='mb-10  w-full lg:w-1/4 px-3'>
+                      <div className='mb-10  w-full lg:w-1/4 '>
                         <Link>
+                          {/* Post image */}
                           <img
                             className='w-full h-full object-cover rounded'
                             src={post?.image}
                             alt=''
                           />
                         </Link>
-
-                        <div className='flex flex-row bg-gray-300 justify-center w-full  items-center '>
+                        {/* Likes, views dislikes */}
+                        <div className='flex flex-row bg-gray-300  justify-center w-full  items-center '>
+                          {/* Likes */}
                           <div className='flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1'>
+                            {/* Togle like  */}
                             <div className=''>
                               <ThumbUpIcon
                                 onClick={() =>
@@ -130,7 +136,7 @@ export default function PostsList() {
                               {post?.likes?.length}
                             </div>
                           </div>
-
+                          {/* Dislike */}
                           <div className='flex flex-row  justify-center items-center ml-4 mr-4 pb-2 pt-1'>
                             <div>
                               <ThumbDownIcon
@@ -144,7 +150,7 @@ export default function PostsList() {
                               {post?.disLikes?.length}
                             </div>
                           </div>
-
+                          {/* Views */}
                           <div className='flex flex-row justify-center items-center ml-4 mr-4 pb-2 pt-1'>
                             <div>
                               <EyeIcon className='h-7 w-7  text-gray-400' />
@@ -158,18 +164,19 @@ export default function PostsList() {
                       <div className='w-full lg:w-3/4 px-3'>
                         <Link className='hover:underline'>
                           <h3 className='mb-1 text-2xl text-green-400 font-bold font-heading'>
+                            {/* {capitalizeWord(post?.title)} */}
                             {post?.title}
                           </h3>
                         </Link>
                         <p className='text-gray-300'>{post?.description}</p>
-
+                        {/* Read more */}
                         <Link
                           to={`/posts/${post?._id}`}
                           className='text-indigo-500 hover:underline'
                         >
                           Read More..
                         </Link>
-
+                        {/* User Avatar */}
                         <div className='mt-6 flex items-center'>
                           <div className='flex-shrink-0'>
                             <Link>
@@ -194,6 +201,10 @@ export default function PostsList() {
                             </div>
                           </div>
                         </div>
+                        {/* <p class="text-gray-500">
+                             Quisque id sagittis turpis. Nulla sollicitudin rutrum
+                             eros eu dictum...
+                           </p> */}
                       </div>
                     </div>
                   ))

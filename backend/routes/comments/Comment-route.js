@@ -11,7 +11,7 @@ const authMiddleware = require("../../middlewares/Auth/authMiddleware");
 const commentRoute = express.Router();
 
 commentRoute.post("/", authMiddleware, createComment);
-commentRoute.get("/", authMiddleware, getAllComments);
+commentRoute.get("/", getAllComments);
 commentRoute.get("/:id", authMiddleware, getOneComment);
 commentRoute.put("/:id", authMiddleware, updateComment);
 commentRoute.delete("/:id", authMiddleware, deleteComment);
