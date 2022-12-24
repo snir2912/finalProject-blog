@@ -110,7 +110,7 @@ export default function PostsList() {
                       key={post.id}
                       className='flex flex-wrap bg-gray-900 -mx-3  lg:mb-6'
                     >
-                      <div className='mb-10  w-full lg:w-1/4 '>
+                      <div className='mb-10 mt-10 w-full lg:w-1/4 '>
                         <Link>
                           {/* Post image */}
                           <img
@@ -161,7 +161,7 @@ export default function PostsList() {
                           </div>
                         </div>
                       </div>
-                      <div className='w-full lg:w-3/4 px-3'>
+                      <div className='w-full lg:w-3/4 px-3 lg:mt-10 s:mt-0'>
                         <Link className='hover:underline'>
                           <h3 className='mb-1 text-2xl text-green-400 font-bold font-heading'>
                             {/* {capitalizeWord(post?.title)} */}
