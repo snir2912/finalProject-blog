@@ -53,7 +53,7 @@ userRoute.put("/unfollow", authMiddleware, unfollowUserCtrl);
 userRoute.put("/block-user/:id", authMiddleware, blockUserCtrl);
 userRoute.put("/unblock-user/:id", authMiddleware, unBlockUserCtrl);
 userRoute.get("/profile/:id", authMiddleware, userProfileCtrl);
-userRoute.put("/:id", authMiddleware, updateUserCtrl);
+userRoute.put("/", authMiddleware, updateUserCtrl);
 userRoute.delete("/:id", deleteUsersCtrl);
 userRoute.get("/:id", fetchUserDetailsCtrl);
 

@@ -15,6 +15,7 @@ import UpdatePost from "./components/Posts/UpdatePost";
 import UpdateComment from "./components/Comments/UpdateComment";
 import Profile from "./components/Users/Profile/Profile";
 import UploadProfilePhoto from "./components/Users/Profile/UploadProfilePhoto";
+import UpdateProfileForm from "./components/Users/Profile/UpdateProfileForm";
 
 function App() {
   return (
@@ -42,6 +43,11 @@ function App() {
           exact
           path='/upload-profile-photo'
           component={UploadProfilePhoto}
+        />
+        <PrivateProtectRoute
+          exact
+          path='/update-profile/:id'
+          component={UpdateProfileForm}
         />
         <AdminRoute exact path='/add-category' component={AddNewCategory} />
         <AdminRoute exact path='/category-list' component={CategoryList} />
