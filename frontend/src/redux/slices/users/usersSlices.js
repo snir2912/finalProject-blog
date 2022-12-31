@@ -88,6 +88,64 @@ export const userProfileAction = createAsyncThunk(
   }
 );
 
+// Follow
+export const followUserAction = createAsyncThunk(
+  "user/follow",
+  async (userToFollowId, { rejectWithValue, getState, dispatch }) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/follow`,
+        { followId: userToFollowId },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+// unFollow
+export const unfollowUserAction = createAsyncThunk(
+  "user/unfollow",
+  async (unFollowId, { rejectWithValue, getState, dispatch }) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userAuth?.token}`,
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/unfollow`,
+        { unFollowId },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //Update action
 export const updateUserAction = createAsyncThunk(
   "users/update",
@@ -232,6 +290,45 @@ const usersSlices = createSlice({
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
     });
+
+    //user Follow
+    builder.addCase(followUserAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(followUserAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.followed = action?.payload;
+      state.unFollowed = undefined;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(followUserAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.unFollowed = undefined;
+      state.serverErr = action?.error?.message;
+    });
+
+    //user unFollow
+    builder.addCase(unfollowUserAction.pending, (state, action) => {
+      state.unfollowLoading = true;
+      state.unFollowedAppErr = undefined;
+      state.unfollowServerErr = undefined;
+    });
+    builder.addCase(unfollowUserAction.fulfilled, (state, action) => {
+      state.unfollowLoading = false;
+      state.unFollowed = action?.payload;
+      state.followed = undefined;
+      state.unFollowedAppErr = undefined;
+      state.unfollowServerErr = undefined;
+    });
+    builder.addCase(unfollowUserAction.rejected, (state, action) => {
+      state.unfollowLoading = false;
+      state.unFollowedAppErr = action?.payload?.message;
+      state.unfollowServerErr = action?.error?.message;
+    });
     //login
     builder.addCase(loginUserAction.pending, (state, action) => {
       state.loading = true;
@@ -252,20 +349,20 @@ const usersSlices = createSlice({
 
     //Profile
     builder.addCase(userProfileAction.pending, (state, action) => {
-      state.loading = true;
-      state.appErr = undefined;
-      state.serverErr = undefined;
+      state.profileLoading = true;
+      state.profileAppErr = undefined;
+      state.profileServerErr = undefined;
     });
     builder.addCase(userProfileAction.fulfilled, (state, action) => {
       state.profile = action?.payload;
-      state.loading = false;
-      state.appErr = undefined;
-      state.serverErr = undefined;
+      state.profileLoading = false;
+      state.profileAppErr = undefined;
+      state.profileServerErr = undefined;
     });
     builder.addCase(userProfileAction.rejected, (state, action) => {
-      state.appErr = action?.payload?.message;
-      state.serverErr = action?.error?.message;
-      state.loading = false;
+      state.profileAppErr = action?.payload?.message;
+      state.profileServerErr = action?.error?.message;
+      state.profileLoading = false;
     });
 
     //update
