@@ -2,6 +2,10 @@ import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 
+//custion action for redirect
+
+const resetEmailAction = createAction("mail/reset");
+
 //action
 export const sendMailAction = createAsyncThunk(
   "mail/sent",
@@ -25,6 +29,7 @@ export const sendMailAction = createAsyncThunk(
         },
         config
       );
+      dispatch(resetEmailAction());
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -39,14 +44,19 @@ export const sendMailAction = createAsyncThunk(
 
 const sendMailSlices = createSlice({
   name: "mail",
-  initialState: { mail: "sent" },
+  initialState: {},
   extraReducers: builder => {
     //create
     builder.addCase(sendMailAction.pending, (state, action) => {
       state.loading = true;
     });
+    //disoatch redirect action
+    builder.addCase(resetEmailAction, (state, action) => {
+      state.isMailSent = true;
+    });
     builder.addCase(sendMailAction.fulfilled, (state, action) => {
       state.mailSent = action?.payload;
+      state.isMailSent = false;
       state.loading = false;
       state.appErr = undefined;
       state.serverErr = undefined;
