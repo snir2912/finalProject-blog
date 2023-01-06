@@ -39,6 +39,7 @@ const loginUserCtrl = expressAsyncHandler(async (req, res) => {
       profilePhoto: userFound?.profilePhoto,
       isAdmin: userFound?.isAdmin,
       token: generateToken(userFound?._id),
+      isVerified: userFound?.isAccountVerified,
     });
   } else {
     res.status(401);
@@ -219,7 +220,7 @@ const generateVerificationTokenCtrl = expressAsyncHandler(async (req, res) => {
     await user.save();
     console.log(verificationToken);
 
-    const resetURL = `If you were requested to verify your account, verify now within 10 minutes, otherwise ignore this message <a href="http://localhost:7777/verify-account/${verificationToken}">Click to verify your account</a>`;
+    const resetURL = `If you were requested to verify your account, verify now within 10 minutes, otherwise ignore this message <a href="http://localhost:7778/verify-account/${verificationToken}">Click to verify your account</a>`;
     const msg = {
       to: user.email,
       from: "snir1290@outlook.com",

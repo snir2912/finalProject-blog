@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { ExclamationIcon } from "@heroicons/react/solid";
-import { accVerificationSendTokenAction } from "../../../redux/slices/accountVerification/accVerificationSendTokenAction";
+import { accVerificationSendTokenAction } from "../../../redux/slices/accountVerification/accVerificationSlices";
 
 export default function AccountVerificationAlertWarning() {
   const dispatch = useDispatch();
