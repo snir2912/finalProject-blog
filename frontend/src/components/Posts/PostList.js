@@ -97,7 +97,7 @@ export default function PostsList() {
                 {/* Post goes here */}
 
                 {appErr || serverErr ? (
-                  <h1>
+                  <h1 className='text-yellow-500 text-center'>
                     {serverErr} {appErr}
                   </h1>
                 ) : postLists?.length <= 0 ? (
@@ -189,7 +189,10 @@ export default function PostsList() {
                           </div>
                           <div className='ml-3'>
                             <p className='text-sm font-medium text-gray-900'>
-                              <Link className='text-yellow-400 hover:underline '>
+                              <Link
+                                className='text-yellow-400 hover:underline'
+                                to={`profile/${post?.user?.id}`}
+                              >
                                 {post?.user?.firstName} {post?.user?.lastName}
                               </Link>
                             </p>
