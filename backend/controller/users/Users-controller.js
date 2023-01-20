@@ -84,6 +84,9 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 const userProfileCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongodbId(id);
+
+  const loginUserId = req?.body?._id;
+
   try {
     const myProfile = await User.findById(id).populate("posts");
     res.json(myProfile);

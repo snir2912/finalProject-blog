@@ -13,6 +13,9 @@ const { errorHandler, notFound } = require("./middlewares/error/errorHandler");
 
 const app = express();
 dbConnect();
+app.get("/", (res, req) => {
+  res.json({ msg: "my app" });
+});
 
 app.use(express.json());
 app.use(cors());
