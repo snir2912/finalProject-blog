@@ -1,11 +1,12 @@
 import React from "react";
 import { useFormik } from "formik";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import poster from "../../../img/poster.png";
 import { loginUserAction } from "../../../redux/slices/users/usersSlices";
 
+//Form schema
 const formSchema = Yup.object({
   email: Yup.string().required("Email is required"),
   password: Yup.string().required("Password is required"),
@@ -13,25 +14,27 @@ const formSchema = Yup.object({
 
 const Login = () => {
   const dispatch = useDispatch();
-
+  //formik
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     onSubmit: values => {
+      //dispath the action
       dispatch(loginUserAction(values));
     },
     validationSchema: formSchema,
   });
 
+  //redirect
   const store = useSelector(state => state?.users);
   const { userAuth, loading, serverErr, appErr } = store;
-  if (userAuth) return <Redirect to={`/profile/${userAuth._id}`} />;
+  if (userAuth) return <Redirect to={`/profile/${userAuth?._id}`} />;
   return (
     <>
       <section className='min-h-screen relative py-20 2xl:py-40 bg-gray-900 overflow-hidden'>
-        <div className='absolute top-0 left-0 lg:bottom-0 h-full lg:h-auto w-full lg:w-4/12 bg-indigo-500 lg:overflow-hidden'>
+        <div className='absolute top-0 left-0 lg:bottom-0 h-full lg:h-auto w-full lg:w-4/12 bg-violet-500 lg:overflow-hidden'>
           <img
             className='hidden lg:block h-full w-full object-cover'
             src={poster}
@@ -43,11 +46,13 @@ const Login = () => {
             <div className='flex flex-wrap items-center -mx-4'>
               <div className='w-full lg:w-2/5 px-4'>
                 <div className='px-6 lg:px-12 py-12 lg:py-24 bg-white shadow-lg rounded-lg'>
+                  {/* Form */}
                   <form onSubmit={formik.handleSubmit}>
                     <h3 className='mb-10 text-2xl font-bold font-heading'>
+                      {/* Header */}
                       Login to your Account
                     </h3>
-
+                    {/* display err */}
                     {serverErr || appErr ? (
                       <h2 className='text-red-500'>
                         {serverErr} - {appErr}
@@ -73,7 +78,7 @@ const Login = () => {
                           ></path>
                         </svg>
                       </span>
-
+                      {/* Email */}
                       <input
                         value={formik.values.email}
                         onChange={formik.handleChange("email")}
@@ -83,7 +88,7 @@ const Login = () => {
                         placeholder='enter email'
                       />
                     </div>
-
+                    {/* Err message */}
                     <div className='text-red-400 mb-2'>
                       {formik.touched.email && formik.errors.email}
                     </div>
@@ -107,7 +112,7 @@ const Login = () => {
                           ></path>
                         </svg>
                       </span>
-
+                      {/* Password */}
                       <input
                         value={formik.values.password}
                         onChange={formik.handleChange("password")}
@@ -117,11 +122,11 @@ const Login = () => {
                         placeholder=' Password'
                       />
                     </div>
-
+                    {/* Err msg */}
                     <div className='text-red-400 mb-2'>
                       {formik.touched.password && formik.errors.password}
                     </div>
-
+                    {/* Login btn */}
                     {loading ? (
                       <button
                         disabled
@@ -138,6 +143,14 @@ const Login = () => {
                       </button>
                     )}
                   </form>
+                  <div className='p-2'>
+                    <Link
+                      to='/reset-password'
+                      className='font-medium text-indigo-600 hover:text-indigo-500'
+                    >
+                      Forget Password ?
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div className='w-full lg:w-3/5 px-4 mb-16 lg:mb-0 order-first lg:order-last'>

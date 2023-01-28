@@ -20,6 +20,8 @@ import SendEmail from "./components/Users/Emailing/SendEmail";
 import AccountVerified from "./components/Users/AccountVerification/AccountVerified";
 import UsersList from "./components/Users/UsersList/UsersList";
 import UpdatePassword from "./components/Users/PasswordManagement/UpdatePassword";
+import ResetPassword from "./components/Users/PasswordManagement/ResetPassword";
+import ResetPasswordForm from "./components/Users/PasswordManagement/ResetPasswordForm";
 
 function App() {
   return (
@@ -67,6 +69,8 @@ function App() {
         <PrivateProtectRoute exact path='/send-mail' component={SendEmail} />
         <AdminRoute exact path='/add-category' component={AddNewCategory} />
         <AdminRoute exact path='/category-list' component={CategoryList} />
+        <Route exact path='/reset-password:token' component={ResetPassword} />
+        <Route exact path='/reset-password' component={ResetPasswordForm} />
         <Route exact path='/posts' component={PostsList} />
         <Route exact path='/posts/:id' component={PostDetails} />
         <Route exact path='/' component={HomePage} />

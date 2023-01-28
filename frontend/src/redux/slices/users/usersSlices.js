@@ -349,6 +349,59 @@ export const uploadProfilePhototAction = createAsyncThunk(
     }
   }
 );
+
+//Password reset token generator
+export const passwordResetTokenAction = createAsyncThunk(
+  "password/token",
+  async (email, { rejectWithValue, getState, dispatch }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.post(
+        `${baseUrl}/api/users/forget-password-token`,
+        { email },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+//Password reset
+export const passwordResetAction = createAsyncThunk(
+  "password/reset",
+  async (user, { rejectWithValue, getState, dispatch }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    //http call
+    try {
+      const { data } = await axios.put(
+        `${baseUrl}/api/users/reset-password`,
+        { password: user?.password, token: user?.token },
+        config
+      );
+      return data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //get user from local storage and place into store
 const userLoginFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -375,6 +428,41 @@ const usersSlices = createSlice({
     });
     builder.addCase(registerUserAction.rejected, (state, action) => {
       console.log(action.payload);
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+    //Password reset token generator
+    builder.addCase(passwordResetTokenAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetTokenAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordToken = action?.payload;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetTokenAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action?.payload?.message;
+      state.serverErr = action?.error?.message;
+    });
+
+    //Password reset
+    builder.addCase(passwordResetAction.pending, (state, action) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordReset = action?.payload;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(passwordResetAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action?.payload?.message;
       state.serverErr = action?.error?.message;
