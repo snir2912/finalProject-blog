@@ -6,6 +6,8 @@ const generateToken = require("../../config/token/genrateToke");
 const User = require("../../models/user-model/User-model");
 const validateMongodbId = require("../../utils/validateMongodbId");
 const cloudinaryUploadImage = require("../../utils/cloudinary");
+const blockUser = require("../../utils/blockUser");
+
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
@@ -110,6 +112,7 @@ const userProfileCtrl = expressAsyncHandler(async (req, res) => {
 
 const updateUserCtrl = expressAsyncHandler(async (req, res) => {
   const { _id } = req?.user;
+  blockUser(req?.user);
   validateMongodbId(_id);
   const user = await User.findByIdAndUpdate(
     _id,
@@ -314,7 +317,7 @@ const passwordResetCtrl = expressAsyncHandler(async (req, res) => {
 
 const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
   const { _id } = req.user;
-
+  blockUser(req?.user);
   const localPath = `public/img/profile/${req.file.filename}`;
   const imgUploaded = await cloudinaryUploadImage(localPath);
 
