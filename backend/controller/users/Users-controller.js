@@ -31,7 +31,9 @@ const loginUserCtrl = expressAsyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const userFound = await User.findOne({ email });
-
+  if (userFound.isBlocked) {
+    throw new Error("Access denied, you are blocked");
+  }
   if (userFound && (await userFound.isPasswordMatched(password))) {
     res.json({
       _id: userFound?._id,

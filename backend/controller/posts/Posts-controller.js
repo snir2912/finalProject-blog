@@ -7,9 +7,9 @@ const cloudinaryUploadImg = require("../../utils/cloudinary");
 const blockUser = require("../../utils/blockUser");
 
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
-  console.log(req.file);
   const { _id } = req.user;
   blockUser(req?.user);
+  // validateMongodbId(req.body.user);
   const filter = new Filter();
   const isProfane = filter.isProfane(req.body.title, req.body.description);
 
@@ -19,6 +19,12 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
     });
     throw new Error(
       "Creating Failed because it contains profane words and you have been blocked"
+    );
+  }
+
+  if (req.user.accountType === "Starter Account" && req.user.postCount >= 3) {
+    throw new Error(
+      "Starter account can public only 3 posts. Get more followers."
     );
   }
 
@@ -32,6 +38,14 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
       image: imgUploaded?.url,
     });
     res.json(post);
+
+    await User.findByIdAndUpdate(
+      _id,
+      {
+        $inc: { postCount: 1 },
+      },
+      { new: true }
+    );
 
     fs.unlinkSync(localPath);
   } catch (error) {
