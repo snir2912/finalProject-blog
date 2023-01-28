@@ -18,6 +18,7 @@ import UploadProfilePhoto from "./components/Users/Profile/UploadProfilePhoto";
 import UpdateProfileForm from "./components/Users/Profile/UpdateProfileForm";
 import SendEmail from "./components/Users/Emailing/SendEmail";
 import AccountVerified from "./components/Users/AccountVerification/AccountVerified";
+import UsersList from "./components/Users/UsersList/UsersList";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           path='/update-category/:id'
           component={UpdateCategory}
         />
+        <AdminRoute exact path='/users' component={UsersList} />
         <PrivateProtectRoute exact path='/create-post' component={CreatePost} />
         <PrivateProtectRoute
           exact

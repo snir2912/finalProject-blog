@@ -43,10 +43,14 @@ const getAllPosts = expressAsyncHandler(async (req, res) => {
     if (hasCategory) {
       const posts = await Post.find({ category: hasCategory })
         .populate("user")
-        .populate("comments");
+        .populate("comments")
+        .sort("-createdAt");
       res.json(posts);
     } else {
-      const posts = await Post.find({}).populate("user").populate("comments");
+      const posts = await Post.find({})
+        .populate("user")
+        .populate("comments")
+        .sort("-createdAt");
       res.json(posts);
     }
   } catch (error) {

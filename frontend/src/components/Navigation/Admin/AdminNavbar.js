@@ -1,4 +1,4 @@
-/* This example requires Tailwind CSS v2.0+ */
+/* This example requires Tailwind BCSS v2.0+ */
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { useDispatch } from "react-redux";
@@ -38,7 +38,7 @@ const AdminNavbar = ({ isLogin }) => {
   //logout
   const dispatch = useDispatch();
   return (
-    <Disclosure as='nav' className='bg-green-800'>
+    <Disclosure as='nav' className='bg-indigo-900'>
       {({ open }) => (
         <>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -57,7 +57,7 @@ const AdminNavbar = ({ isLogin }) => {
                 </div>
                 <div className='flex-shrink-0 flex items-center'>
                   {/* Logo */}
-                  <BookOpenIcon className='h-10 w-10 text-yellow-200' />
+                  <BookOpenIcon className='h-10 w-10 text-gray-100' />
                 </div>
                 <div className='hidden md:ml-6 md:flex md:items-center md:space-x-4'>
                   {navigation.map(item => (

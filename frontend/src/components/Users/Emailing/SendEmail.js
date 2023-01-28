@@ -4,14 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { sendMailAction } from "../../../redux/slices/email/emailSlices";
 
+//Form schema
 const formSchema = Yup.object({
   recipientEmail: Yup.string().required("Recipent Email is required"),
   subject: Yup.string().required("Subject is required"),
   message: Yup.string().required("Message is required"),
 });
 const SendEmail = ({ location: { state } }) => {
+  console.log(state);
+  //dispath
   const dispatch = useDispatch();
-
+  //formik
   const formik = useFormik({
     initialValues: {
       recipientEmail: state?.email,
@@ -19,23 +22,24 @@ const SendEmail = ({ location: { state } }) => {
       message: "",
     },
     onSubmit: values => {
+      //dispath the action
       dispatch(sendMailAction(values));
     },
     validationSchema: formSchema,
   });
-
+  //select data from store
   const sendMail = useSelector(state => state?.sendMail);
   const { mailSent, loading, appErr, serverErr, isMailSent } = sendMail;
-  console.log(isMailSent);
 
+  //redirect
   if (isMailSent) return <Redirect to={`/profile/${state?.id}`} />;
   return (
     <div className='min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-300'>
-          Send Mesage to
+          Send Mesage to<br></br>
           {/* Email title */}
-          <span className='text-green-300'> {state?.email}</span>
+          <span className='text-green-300'>{state.email}</span>
         </h2>
 
         <p className='mt-2 text-center text-lg text-red-500'>

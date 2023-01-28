@@ -107,6 +107,11 @@ userSchema.virtual("posts", {
   localField: "_id",
 });
 
+userSchema.virtual("accountType").get(function () {
+  const totalFollowers = this.followers?.length;
+  return totalFollowers >= 5 ? "Pro Account" : "Starter Account";
+});
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
