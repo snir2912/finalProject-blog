@@ -1,13 +1,9 @@
 import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
-
-//Redirect action
-
 const resetUserAction = createAction("user/profile/reset");
 const resetPasswordAction = createAction("password/reset");
 
-//register action
 export const registerUserAction = createAsyncThunk(
   "users/register",
   async (user, { rejectWithValue, getState, dispatch }) => {
@@ -16,7 +12,7 @@ export const registerUserAction = createAsyncThunk(
         "Content-Type": "application/json",
       },
     };
-    //http call
+
     try {
       const { data } = await axios.post(
         `${baseUrl}/api/users/register`,
@@ -33,7 +29,6 @@ export const registerUserAction = createAsyncThunk(
   }
 );
 
-//Login
 export const loginUserAction = createAsyncThunk(
   "user/login",
   async (userData, { rejectWithValue, getState, dispatch }) => {
@@ -43,13 +38,12 @@ export const loginUserAction = createAsyncThunk(
       },
     };
     try {
-      //make http call
       const { data } = await axios.post(
         `${baseUrl}/api/users/login`,
         userData,
         config
       );
-      //save user into local storage
+
       localStorage.setItem("userInfo", JSON.stringify(data));
       return data;
     } catch (error) {
@@ -61,11 +55,9 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
-// Profile
 export const userProfileAction = createAsyncThunk(
   "user/profile",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -73,7 +65,7 @@ export const userProfileAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.get(
         `${baseUrl}/api/users/profile/${id}`,
@@ -89,11 +81,9 @@ export const userProfileAction = createAsyncThunk(
   }
 );
 
-// Follow
 export const followUserAction = createAsyncThunk(
   "user/follow",
   async (userToFollowId, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -101,7 +91,7 @@ export const followUserAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/users/follow`,
@@ -118,11 +108,9 @@ export const followUserAction = createAsyncThunk(
   }
 );
 
-// unFollow
 export const unfollowUserAction = createAsyncThunk(
   "user/unfollow",
   async (unFollowId, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -130,7 +118,7 @@ export const unfollowUserAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/users/unfollow`,
@@ -147,11 +135,9 @@ export const unfollowUserAction = createAsyncThunk(
   }
 );
 
-//Update action
 export const updateUserAction = createAsyncThunk(
   "users/update",
   async (userData, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -159,7 +145,7 @@ export const updateUserAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/users`,
@@ -171,7 +157,7 @@ export const updateUserAction = createAsyncThunk(
         },
         config
       );
-      //dispatch
+
       dispatch(resetUserAction());
       return data;
     } catch (error) {
@@ -183,11 +169,9 @@ export const updateUserAction = createAsyncThunk(
   }
 );
 
-//Update Password
 export const updatePasswordAction = createAsyncThunk(
   "password/update",
   async (password, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -195,7 +179,7 @@ export const updatePasswordAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/users/password`,
@@ -204,7 +188,7 @@ export const updatePasswordAction = createAsyncThunk(
         },
         config
       );
-      //dispatch
+
       dispatch(resetPasswordAction());
       return data;
     } catch (error) {
@@ -216,7 +200,6 @@ export const updatePasswordAction = createAsyncThunk(
   }
 );
 
-//fetch User details
 export const fetchUserDetailsAction = createAsyncThunk(
   "user/detail",
   async (id, { rejectWithValue, getState, dispatch }) => {
@@ -230,11 +213,9 @@ export const fetchUserDetailsAction = createAsyncThunk(
   }
 );
 
-//fetch all users
 export const fetchUsersAction = createAsyncThunk(
   "user/list",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -252,11 +233,9 @@ export const fetchUsersAction = createAsyncThunk(
   }
 );
 
-//Block User
 export const blockUserAction = createAsyncThunk(
   "user/block",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -278,11 +257,9 @@ export const blockUserAction = createAsyncThunk(
   }
 );
 
-//unBlock User
 export const unBlockUserAction = createAsyncThunk(
   "user/unblock",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -303,7 +280,7 @@ export const unBlockUserAction = createAsyncThunk(
     }
   }
 );
-//Logout action
+
 export const logoutAction = createAsyncThunk(
   "/user/logout",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -318,12 +295,11 @@ export const logoutAction = createAsyncThunk(
   }
 );
 
-//Upload Profile Photo
 export const uploadProfilePhototAction = createAsyncThunk(
   "user/profile-photo",
   async (userImg, { rejectWithValue, getState, dispatch }) => {
     console.log(userImg);
-    //get user token
+
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -332,7 +308,6 @@ export const uploadProfilePhototAction = createAsyncThunk(
       },
     };
     try {
-      //http call
       const formData = new FormData();
 
       formData.append("image", userImg?.image);
@@ -350,7 +325,6 @@ export const uploadProfilePhototAction = createAsyncThunk(
   }
 );
 
-//Password reset token generator
 export const passwordResetTokenAction = createAsyncThunk(
   "password/token",
   async (email, { rejectWithValue, getState, dispatch }) => {
@@ -359,10 +333,10 @@ export const passwordResetTokenAction = createAsyncThunk(
         "Content-Type": "application/json",
       },
     };
-    //http call
+
     try {
       const { data } = await axios.post(
-        `${baseUrl}/api/users/forget-password-token`,
+        `${baseUrl}/api/users/forget-password`,
         { email },
         config
       );
@@ -376,7 +350,6 @@ export const passwordResetTokenAction = createAsyncThunk(
   }
 );
 
-//Password reset
 export const passwordResetAction = createAsyncThunk(
   "password/reset",
   async (user, { rejectWithValue, getState, dispatch }) => {
@@ -385,7 +358,7 @@ export const passwordResetAction = createAsyncThunk(
         "Content-Type": "application/json",
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/users/reset-password`,
@@ -402,12 +375,10 @@ export const passwordResetAction = createAsyncThunk(
   }
 );
 
-//get user from local storage and place into store
 const userLoginFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
-//slices
 const usersSlices = createSlice({
   name: "users",
   initialState: {

@@ -7,14 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { createpostAction } from "../../redux/slices/posts/postSlices";
 import CategoryDropDown from "../Categories/CategoryDropDown";
 
-//Form schema
 const formSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
   category: Yup.object().required("Category is required"),
   image: Yup.string().required("Image is required"),
 });
-//css for dropzone
+
 const Container = styled.div`
   flex: 1;
   display: flex;

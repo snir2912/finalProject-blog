@@ -12,11 +12,10 @@ import { fetchCategoriesAction } from "../../redux/slices/category/categorySlice
 import LoadingComponent from "../../utils/LoadingComponent";
 
 export default function PostsList() {
-  //select post from store
   const post = useSelector(state => state?.post);
   const { postLists, loading, appErr, serverErr, likes, dislikes } = post;
   console.log(postLists);
-  //select categories from store
+
   const category = useSelector(state => state?.category);
   const {
     categoryList,
@@ -24,13 +23,13 @@ export default function PostsList() {
     appErr: catAppErr,
     serverErr: catServerErr,
   } = category;
-  //dispatch
+
   const dispatch = useDispatch();
-  //fetch post
+
   useEffect(() => {
     dispatch(fetchPostsAction(""));
   }, [dispatch, likes, dislikes]);
-  //fetch categories
+
   useEffect(() => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
@@ -50,7 +49,6 @@ export default function PostsList() {
                 </h2>
               </div>
               <div className=' block text-right w-1/2'>
-                {/* View All */}
                 <button
                   onClick={() => dispatch(fetchPostsAction(""))}
                   className='inline-block py-2 px-6 rounded-l-xl rounded-t-xl bg-green-600 hover:bg-green-700 text-gray-50 font-bold leading-loose transition duration-200'
@@ -164,7 +162,6 @@ export default function PostsList() {
                       <div className='w-full lg:w-3/4 px-3 lg:mt-10 s:mt-0'>
                         <Link className='hover:underline'>
                           <h3 className='mb-1 text-2xl text-green-400 font-bold font-heading'>
-                            {/* {capitalizeWord(post?.title)} */}
                             {post?.title}
                           </h3>
                         </Link>
@@ -176,7 +173,7 @@ export default function PostsList() {
                         >
                           Read More..
                         </Link>
-                        {/* User Avatar */}
+
                         <div className='mt-6 flex items-center'>
                           <div className='flex-shrink-0'>
                             <Link>
@@ -204,10 +201,6 @@ export default function PostsList() {
                             </div>
                           </div>
                         </div>
-                        {/* <p class="text-gray-500">
-                             Quisque id sagittis turpis. Nulla sollicitudin rutrum
-                             eros eu dictum...
-                           </p> */}
                       </div>
                     </div>
                   ))

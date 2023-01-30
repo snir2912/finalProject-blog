@@ -2,13 +2,11 @@ import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 
-//action to redirect
 const resetCommentAction = createAction("comment/reset");
-//create
+
 export const createCommentAction = createAsyncThunk(
   "comment/create",
   async (comment, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -16,7 +14,7 @@ export const createCommentAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.post(
         `${baseUrl}/api/comments`,
@@ -36,11 +34,9 @@ export const createCommentAction = createAsyncThunk(
   }
 );
 
-//delete
 export const deleteCommentAction = createAsyncThunk(
   "comment/delete",
   async (commentId, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -48,7 +44,7 @@ export const deleteCommentAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.delete(
         `${baseUrl}/api/comments/${commentId}`,
@@ -64,11 +60,9 @@ export const deleteCommentAction = createAsyncThunk(
   }
 );
 
-//Update
 export const updateCommentAction = createAsyncThunk(
   "comment/update",
   async (comment, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -76,14 +70,14 @@ export const updateCommentAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/comments/${comment?.id}`,
         { description: comment?.description },
         config
       );
-      //dispatch
+
       dispatch(resetCommentAction());
       return data;
     } catch (error) {
@@ -95,11 +89,9 @@ export const updateCommentAction = createAsyncThunk(
   }
 );
 
-//fetch comment details
 export const fetchCommentAction = createAsyncThunk(
   "comment/fetch-details",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -107,7 +99,7 @@ export const fetchCommentAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.get(`${baseUrl}/api/comments/${id}`, config);
       return data;
@@ -123,7 +115,6 @@ const commentSlices = createSlice({
   name: "comment",
   initialState: {},
   extraReducers: builder => {
-    //create
     builder.addCase(createCommentAction.pending, (state, action) => {
       state.loading = true;
     });

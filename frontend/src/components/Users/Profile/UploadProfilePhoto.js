@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { uploadProfilePhototAction } from "../../../redux/slices/users/usersSlices";
 
-//Css for dropzone
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -29,7 +28,7 @@ const formSchema = Yup.object({
 
 export default function UploadProfilePhoto() {
   const dispatch = useDispatch();
-  //formik
+
   const formik = useFormik({
     initialValues: {
       image: "",
@@ -39,10 +38,10 @@ export default function UploadProfilePhoto() {
     },
     validationSchema: formSchema,
   });
-  //store data
+
   const users = useSelector(state => state?.users);
   const { profilePhoto, loading, appErr, serverErr, userAuth } = users;
-  //redirect
+
   if (profilePhoto) return <Redirect to={`/profile/${userAuth?._id}`} />;
   return (
     <div className='min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
@@ -50,13 +49,11 @@ export default function UploadProfilePhoto() {
         <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-300'>
           Upload profile photo
         </h2>
-        {/* Displya err here */}
       </div>
 
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
           <form className='space-y-6' onSubmit={formik.handleSubmit}>
-            {/* Image container here thus Dropzone */}
             {appErr || serverErr ? (
               <h2 className='text-center text-red-500'>
                 {serverErr} {appErr}

@@ -2,12 +2,7 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
-import {
-  BellIcon,
-  MenuIcon,
-  XIcon,
-  BookOpenIcon,
-} from "@heroicons/react/outline";
+import { MenuIcon, XIcon, BookOpenIcon } from "@heroicons/react/outline";
 import { PlusIcon, LogoutIcon } from "@heroicons/react/solid";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../../../redux/slices/users/usersSlices";

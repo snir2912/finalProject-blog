@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import { passwordResetAction } from "../../../redux/slices/users/usersSlices";
 
-//Form schema
 const formSchema = Yup.object({
   password: Yup.string().required("Password is required"),
 });
@@ -15,13 +14,12 @@ const ResetPassword = props => {
   const token = props.match.params.token;
 
   const dispatch = useDispatch();
-  //formik
+
   const formik = useFormik({
     initialValues: {
-      pasword: "",
+      password: "",
     },
     onSubmit: values => {
-      //dispath the action
       const data = {
         password: values?.password,
         token,
@@ -31,16 +29,13 @@ const ResetPassword = props => {
     validationSchema: formSchema,
   });
 
-  //select data from store
   const users = useSelector(state => state?.users);
   const { passwordReset, loading, appErr, serverErr } = users;
-
-  //Redirect
 
   useEffect(() => {
     setTimeout(() => {
       if (passwordReset) props.history.push("/login");
-    }, 5000);
+    }, 2000);
   }, [passwordReset]);
 
   return (
@@ -56,7 +51,6 @@ const ResetPassword = props => {
             </a>
           </p>
         </div>
-        {/* Err msg */}
         <div className='text-red-500 text-center'>
           {appErr || serverErr ? (
             <h3>
@@ -64,13 +58,11 @@ const ResetPassword = props => {
             </h3>
           ) : null}
         </div>
-
-        {/* Sucess msg */}
         <div className='text-green-700 text-center'>
           {passwordReset && (
             <h3>
               Password Reset Successfully. You will be redirected to login with
-              5 seconds
+              2 seconds
             </h3>
           )}
         </div>
@@ -90,7 +82,7 @@ const ResetPassword = props => {
                 className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
                 placeholder='Enter new Password'
               />
-              {/* Err msg */}
+
               <div className='text-red-400 mb-2'>
                 {formik.touched.password && formik.errors.password}
               </div>

@@ -2,15 +2,11 @@ import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 
-//custion action for redirect
-
 const resetEmailAction = createAction("mail/reset");
 
-//action
 export const sendMailAction = createAsyncThunk(
   "mail/sent",
   async (email, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -18,7 +14,7 @@ export const sendMailAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.post(
         `${baseUrl}/api/email`,
@@ -39,8 +35,6 @@ export const sendMailAction = createAsyncThunk(
     }
   }
 );
-
-//slices
 
 const sendMailSlices = createSlice({
   name: "mail",

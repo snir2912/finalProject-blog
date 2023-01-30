@@ -19,9 +19,8 @@ const UsersListHeader = users => {
           Authors List - {users?.users?.length}
         </h1>
         <p className='mt-6 text-xl text-indigo-100 max-w-3xl'>
-          Mattis amet hendrerit dolor, quisque lorem pharetra. Pellentesque
-          lacus nisi urna, arcu sociis eu. Orci vel lectus nisl eget eget ut
-          consectetur. Sit justo viverra non adipisicing elit distinctio.
+          Welcome to our authors page. Here you can find all the authors of the
+          articles on the site.
         </p>
       </div>
     </div>

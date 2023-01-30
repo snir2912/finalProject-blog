@@ -5,26 +5,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import { passwordResetTokenAction } from "../../../redux/slices/users/usersSlices";
 
-//Form schema
 const formSchema = Yup.object({
   email: Yup.string().required("Email is required"),
 });
 
 const ResetPasswordForm = () => {
   const dispatch = useDispatch();
-  //formik
+
   const formik = useFormik({
     initialValues: {
       email: "",
     },
     onSubmit: values => {
-      //dispath the action
       dispatch(passwordResetTokenAction(values?.email));
     },
     validationSchema: formSchema,
   });
 
-  //select data from store
   const users = useSelector(state => state?.users);
   const { passwordToken, loading, appErr, serverErr } = users;
   return (
@@ -40,7 +37,7 @@ const ResetPasswordForm = () => {
             </a>
           </p>
         </div>
-        {/* Err msg */}
+
         <div className='text-red-500 text-center'>
           {appErr || serverErr ? (
             <h3>
@@ -48,8 +45,6 @@ const ResetPasswordForm = () => {
             </h3>
           ) : null}
         </div>
-
-        {/* Sucess msg */}
         <div className='text-green-700 text-center'>
           {passwordToken && (
             <h3>
@@ -74,7 +69,7 @@ const ResetPasswordForm = () => {
                 className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
                 placeholder='Email address'
               />
-              {/* Err msg */}
+
               <div className='text-red-400 mb-2'>
                 {formik.touched.email && formik.errors.email}
               </div>

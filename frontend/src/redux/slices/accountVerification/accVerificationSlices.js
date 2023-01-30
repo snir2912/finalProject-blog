@@ -2,14 +2,11 @@ import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../utils/baseURL";
 
-//action for redirect
 const resetAcc = createAction("account/verify-reset");
 
-//create verification token
 export const accVerificationSendTokenAction = createAsyncThunk(
   "account/token",
   async (email, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -17,7 +14,7 @@ export const accVerificationSendTokenAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.post(
         `${baseUrl}/api/users/generate-verify-email-token`,
@@ -35,11 +32,9 @@ export const accVerificationSendTokenAction = createAsyncThunk(
   }
 );
 
-//Verify Account
 export const verifyAccountAction = createAsyncThunk(
   "account/verify",
   async (token, { rejectWithValue, getState, dispatch }) => {
-    //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
@@ -47,14 +42,13 @@ export const verifyAccountAction = createAsyncThunk(
         Authorization: `Bearer ${userAuth?.token}`,
       },
     };
-    //http call
+
     try {
       const { data } = await axios.put(
         `${baseUrl}/api/users/verify-account`,
         { token },
         config
       );
-      //dispatch
       dispatch(resetAcc());
       return data;
     } catch (error) {
@@ -66,13 +60,10 @@ export const verifyAccountAction = createAsyncThunk(
   }
 );
 
-//slices
-
 const accountVericationSlices = createSlice({
   name: "account",
   initialState: {},
   extraReducers: builder => {
-    //create
     builder.addCase(accVerificationSendTokenAction.pending, (state, action) => {
       state.loading = true;
     });

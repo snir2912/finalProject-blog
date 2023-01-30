@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { sendMailAction } from "../../../redux/slices/email/emailSlices";
 
-//Form schema
 const formSchema = Yup.object({
   recipientEmail: Yup.string().required("Recipent Email is required"),
   subject: Yup.string().required("Subject is required"),
@@ -12,9 +11,8 @@ const formSchema = Yup.object({
 });
 const SendEmail = ({ location: { state } }) => {
   console.log(state);
-  //dispath
   const dispatch = useDispatch();
-  //formik
+
   const formik = useFormik({
     initialValues: {
       recipientEmail: state?.email,
@@ -22,16 +20,14 @@ const SendEmail = ({ location: { state } }) => {
       message: "",
     },
     onSubmit: values => {
-      //dispath the action
       dispatch(sendMailAction(values));
     },
     validationSchema: formSchema,
   });
-  //select data from store
+
   const sendMail = useSelector(state => state?.sendMail);
   const { mailSent, loading, appErr, serverErr, isMailSent } = sendMail;
 
-  //redirect
   if (isMailSent) return <Redirect to={`/profile/${state?.id}`} />;
   return (
     <div className='min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
@@ -50,7 +46,7 @@ const SendEmail = ({ location: { state } }) => {
           ) : null}
         </p>
         <p className='mt-2 text-center text-sm text-gray-600'>
-          {/* {emailSent && <div>Sent</div>} */}
+          {mailSent && <div>Sent</div>}
         </p>
       </div>
 
@@ -64,7 +60,7 @@ const SendEmail = ({ location: { state } }) => {
               >
                 Recipient Email
               </label>
-              {/* Email message */}
+
               <div className='mt-1'>
                 <input
                   value={formik.values.recipientEmail}
@@ -78,7 +74,7 @@ const SendEmail = ({ location: { state } }) => {
                   className='appearance-none block w-full px-3 py-2 border bg-gray-200 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
                 />
               </div>
-              {/* Err msg */}
+
               <div className='text-red-500'>
                 {formik.touched.recipientEmail && formik.errors.recipientEmail}
               </div>
@@ -91,7 +87,6 @@ const SendEmail = ({ location: { state } }) => {
                 Subject
               </label>
               <div className='mt-1'>
-                {/* Subject */}
                 <input
                   value={formik.values.subject}
                   onChange={formik.handleChange("subject")}
@@ -103,7 +98,7 @@ const SendEmail = ({ location: { state } }) => {
                   className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
                 />
               </div>
-              {/* err msg */}
+
               <div className='text-red-500'>
                 {formik.touched.subject && formik.errors.subject}
               </div>
@@ -115,7 +110,7 @@ const SendEmail = ({ location: { state } }) => {
               >
                 Message
               </label>
-              {/* email message */}
+
               <textarea
                 value={formik.values.message}
                 onChange={formik.handleChange("message")}
@@ -125,12 +120,12 @@ const SendEmail = ({ location: { state } }) => {
                 className='rounded-lg appearance-none block w-full py-3 px-3 text-base text-center leading-tight text-gray-600 bg-transparent focus:bg-transparent  border border-gray-200 focus:border-gray-500  focus:outline-none'
                 type='text'
               ></textarea>
-              {/* err here */}
+
               <div className='text-red-500'>
                 {formik.touched.message && formik.errors.message}
               </div>
             </div>
-            {/* Submit btn */}
+
             <div>
               {loading ? (
                 <button

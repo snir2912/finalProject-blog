@@ -38,7 +38,7 @@ userRoute.put(
   profilePhotoUploadCtrl
 );
 userRoute.get("/", authMiddleware, fetchUsersCtrl);
-userRoute.post("/forget-password-token", forgetPasswordToken);
+userRoute.post("/forget-password", forgetPasswordToken);
 userRoute.put("/reset-password", passwordResetCtrl);
 userRoute.put("/password", authMiddleware, updateUserPasswordCtrl);
 userRoute.put("/follow", authMiddleware, followingUserCtrl);

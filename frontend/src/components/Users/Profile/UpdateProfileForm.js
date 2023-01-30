@@ -8,7 +8,6 @@ import {
   fetchUserDetailsAction,
 } from "../../../redux/slices/users/usersSlices";
 
-//Form schema
 const formSchema = Yup.object({
   firstName: Yup.string().required("First Name is required"),
   lastName: Yup.string().required("Last Name is required"),
@@ -22,16 +21,14 @@ const UpdateProfileForm = ({
   },
 }) => {
   const dispatch = useDispatch();
-  //fetch user details
+
   useEffect(() => {
     dispatch(fetchUserDetailsAction(id));
   }, [dispatch, id]);
 
-  //get user from store
   const users = useSelector(state => state.users);
   const { userDetails, isUpdated, loading, appErr, serverErr } = users;
 
-  //formik
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -41,13 +38,10 @@ const UpdateProfileForm = ({
       bio: userDetails?.bio,
     },
     onSubmit: values => {
-      //dispath the action
       dispatch(updateUserAction(values));
     },
     validationSchema: formSchema,
   });
-
-  //redirect
 
   if (isUpdated) return <Redirect to={`/profile/${id}`} />;
   return (
@@ -60,7 +54,6 @@ const UpdateProfileForm = ({
           </span>{" "}
           Do want to update your profile?
         </h3>
-        {/* ERR */}
         {serverErr || appErr ? (
           <h2 className='text-red-300 text-center'>
             {serverErr} {appErr}
@@ -79,7 +72,6 @@ const UpdateProfileForm = ({
                 First Name
               </label>
               <div className='mt-1'>
-                {/* First name */}
                 <input
                   value={formik.values.firstName}
                   onChange={formik.handleChange("firstName")}
@@ -103,7 +95,6 @@ const UpdateProfileForm = ({
                 Last Name
               </label>
               <div className='mt-1'>
-                {/* Last Name */}
                 <input
                   value={formik.values.lastName}
                   onChange={formik.handleChange("lastName")}
@@ -115,7 +106,6 @@ const UpdateProfileForm = ({
                   className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
                 />
               </div>
-              {/* Err msg */}
               <div className='text-red-500'>
                 {formik.touched.lastName && formik.errors.lastName}
               </div>
@@ -128,7 +118,6 @@ const UpdateProfileForm = ({
                 Email
               </label>
               <div className='mt-1'>
-                {/* Email */}
                 <input
                   value={formik.values.email}
                   onChange={formik.handleChange("email")}
@@ -140,7 +129,6 @@ const UpdateProfileForm = ({
                   className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
                 />
               </div>
-              {/* err msg */}
               <div className='text-red-500'>
                 {formik.touched.email && formik.errors.email}
               </div>
@@ -161,13 +149,11 @@ const UpdateProfileForm = ({
                 className='rounded-lg appearance-none block w-full py-3 px-3 text-base text-center leading-tight text-gray-600 bg-transparent focus:bg-transparent  border border-gray-200 focus:border-gray-500  focus:outline-none'
                 type='text'
               ></textarea>
-              {/* Err msg */}
               <div className='text-red-500'>
                 {formik.touched.bio && formik.errors.bio}
               </div>
             </div>
             <div>
-              {/* submit btn */}
               {loading ? (
                 <button
                   disabled

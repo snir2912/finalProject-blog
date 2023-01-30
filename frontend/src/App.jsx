@@ -69,8 +69,8 @@ function App() {
         <PrivateProtectRoute exact path='/send-mail' component={SendEmail} />
         <AdminRoute exact path='/add-category' component={AddNewCategory} />
         <AdminRoute exact path='/category-list' component={CategoryList} />
-        <Route exact path='/reset-password:token' component={ResetPassword} />
-        <Route exact path='/reset-password' component={ResetPasswordForm} />
+        <Route exact path='/reset-password/:token' component={ResetPassword} />
+        <Route exact path='/forget-password' component={ResetPasswordForm} />
         <Route exact path='/posts' component={PostsList} />
         <Route exact path='/posts/:id' component={PostDetails} />
         <Route exact path='/' component={HomePage} />

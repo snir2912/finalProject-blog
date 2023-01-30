@@ -4,20 +4,17 @@ import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePasswordAction } from "../../../redux/slices/users/usersSlices";
 
-//Form schema
 const formSchema = Yup.object({
   password: Yup.string().required("Password is required"),
 });
 
 const UpdatePassword = () => {
   const dispatch = useDispatch();
-  //formik
   const formik = useFormik({
     initialValues: {
       password: "",
     },
     onSubmit: values => {
-      //dispath the action
       dispatch(updatePasswordAction(values?.password));
     },
     validationSchema: formSchema,
@@ -26,7 +23,6 @@ const UpdatePassword = () => {
   const users = useSelector(state => state?.users);
   const { isPasswordUpdated, loading, appErr, serverErr, userAuth } = users;
 
-  //redirect
   if (isPasswordUpdated) return <Redirect to={`profile/${userAuth?._id}`} />;
   return (
     <div className='min-h-screen bg-gray-700  flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
@@ -66,8 +62,6 @@ const UpdatePassword = () => {
                   ></path>
                 </svg>
               </span>
-              {/* Password */}
-
               <input
                 value={formik.values.password}
                 onChange={formik.handleChange("password")}
@@ -77,12 +71,10 @@ const UpdatePassword = () => {
                 placeholder=' Password'
               />
             </div>
-            {/* Err msg */}
             <div className='text-red-400 mb-2'>
               {formik.touched.password && formik.errors.password}
             </div>
             <div>
-              {/* Submit btn */}
               {loading ? (
                 <button
                   disabled

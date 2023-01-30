@@ -8,7 +8,6 @@ import {
   fetchCommentAction,
 } from "../../redux/slices/comments/commentSlices";
 
-//Form schema
 const formSchema = Yup.object({
   description: Yup.string().required("Description is required"),
 });
@@ -18,13 +17,12 @@ const UpdateComment = ({
     params: { id },
   },
 }) => {
-  //dispatch
   const dispatch = useDispatch();
-  //fetch comment
+
   useEffect(() => {
     dispatch(fetchCommentAction(id));
   }, [dispatch, id]);
-  //select comment from store
+
   const comment = useSelector(state => state?.comment);
   const { commentDetails, isUpdate } = comment;
 
@@ -38,13 +36,12 @@ const UpdateComment = ({
         id,
         description: values?.description,
       };
-      //dispatch action
+
       dispatch(updateCommentAction(data));
     },
     validationSchema: formSchema,
   });
 
-  //redirect
   if (isUpdate) return <Redirect to={`/posts`} />;
   return (
     <div className='h-96 flex justify-center items-center'>
