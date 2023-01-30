@@ -13,9 +13,6 @@ const { errorHandler, notFound } = require("./middlewares/error/errorHandler");
 
 const app = express();
 dbConnect();
-app.get("/", (res, req) => {
-  res.json({ msg: "my app" });
-});
 
 app.use(express.json());
 app.use(cors());
@@ -29,5 +26,5 @@ app.use("/api/category", categoryRoute);
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 1234;
+const PORT = process.env.PORT || 7778;
 app.listen(PORT, console.log(`Server is running ${PORT}`));
