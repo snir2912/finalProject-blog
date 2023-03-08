@@ -39,7 +39,7 @@ export default function CreatePost() {
     initialValues: {
       title: "",
       description: "",
-      category: "",
+      category: { category: "general" },
       image: "",
     },
     onSubmit: values => {

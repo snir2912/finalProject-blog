@@ -33,7 +33,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
   const imgUploaded = await cloudinaryUploadImg(localPath);
   try {
     const post = await Post.create({
-      ...req.body,
+      ...req?.body,
       user: _id,
       image: imgUploaded?.url,
     });
